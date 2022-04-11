@@ -6,6 +6,8 @@ import * as path from 'path';
 import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs';
 import { CONFIG } from '@crossword/config';
+import * as cors from 'cors';
+
 
 async function startApolloServer(typeDefs, resolvers){
   const app = express()
@@ -19,11 +21,11 @@ async function startApolloServer(typeDefs, resolvers){
   // app.get('/', (req, res) => {
   //   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
   // })
-
   // app.use(express.static(path.join(__dirname, '../frontend/build')));
+  app.use(cors()); //TODO pick CORS policy besides *
 
   await server.start();
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app } );
   await new Promise<void>(resolve => httpServer.listen({ port: CONFIG.PORT }, resolve));
   console.log(`🚀 Server ready at http://localhost:${CONFIG.PORT}${server.graphqlPath}`)
 }

@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import CrosswordBoxContainer from "./components/VerticalWord/CrosswordBoxContainer";
+import CrosswordBoxContainer from './components/VerticalWord/CrosswordBoxContainer';
 
 function App() {
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Ethan is?</h1>
+      <h1 style={{ textAlign: 'center' }}>Ethan is?</h1>
       <CrosswordBoxContainer value="dralssa" />;
     </>
   );
