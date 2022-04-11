@@ -10,7 +10,7 @@ https://docs.volta.sh/guide/getting-started
 
 `volta install yarn`
 
-##Install Prettier Extension
+## Install Prettier Extension
 
 Consider turning on auto-format for editor
 
