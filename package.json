@@ -1,0 +1,14 @@
+{
+  "name": "crossword",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "yarn --cwd backend dev & yarn --cwd frontend react-scripts start",
+    "build": "yarn --cwd frontend build"
+  }
+}
