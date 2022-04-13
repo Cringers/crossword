@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>Ethan is?</h1>
-      <CrosswordBoxContainer value="dralssa" />;
+      <CrosswordBoxContainer value={grid?.data?.crossword.name as string}/>;
     </>
   );
 }
