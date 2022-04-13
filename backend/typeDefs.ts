@@ -8,5 +8,18 @@ export const typeDefs = gql`
 
     type Query{
     test: Test! 
+    crossword: Crossword!
+    }
+
+    type Crossword {
+        name: String!
+        id: String! 
+        grid: [Point!]!
+    }   
+
+    type Point {
+        x: Int!
+        y: Int!
+        value: String! 
     }
 `
