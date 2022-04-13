@@ -2,7 +2,7 @@ overwrite: true
 schema: "./typeDefs.ts"
 documents: null
 generates:
-  backend/generated/graphql.ts:
+  ./generated/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-resolvers"

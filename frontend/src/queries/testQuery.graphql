@@ -3,3 +3,13 @@ query Test {
     name
   }
 }
+
+query Crossword {
+  crossword {
+    name
+    grid {
+      x
+      y
+    }
+  }
+}
