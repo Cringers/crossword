@@ -10,6 +10,6 @@
   "scripts": {
     "start": "yarn --cwd backend dev & yarn --cwd frontend start",
     "build": "yarn --cwd frontend build",
-    "generate": "yarn --cwd frontend generate"
+    "generate": "yarn --cwd frontend generate && yarn --cwd backend generate"
   }
 }

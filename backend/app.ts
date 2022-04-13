@@ -25,7 +25,7 @@ async function startApolloServer(typeDefs, resolvers){
   app.use(cors()); //TODO pick CORS policy besides *
 
   await server.start();
-  server.applyMiddleware({ app } );
+  server.applyMiddleware({ app });
   await new Promise<void>(resolve => httpServer.listen({ port: CONFIG.PORT }, resolve));
   console.log(`🚀 Server ready at http://localhost:${CONFIG.PORT}${server.graphqlPath}`)
 }

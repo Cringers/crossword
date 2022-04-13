@@ -1,5 +1,4 @@
-import { Resolvers } from "./generated/graphql";
-import { Test } from "./generated/graphql"
+import { Resolvers, Test, Crossword } from "./generated/graphql";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -8,6 +7,17 @@ export const resolvers: Resolvers = {
           name: "ethan is resolved",
           id: "balls"
         }
+    },
+    crossword: () : Crossword => {
+      return {
+          name: "someName",
+          id: "someId",
+          grid: [ {
+           x: 0,
+           y: 0,
+           value: "d"
+          }]
+      }
     }
   },
 };

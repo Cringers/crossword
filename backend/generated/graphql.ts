@@ -13,8 +13,23 @@ export type Scalars = {
   Float: number;
 };
 
+export type Crossword = {
+  __typename?: 'Crossword';
+  grid: Array<Point>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type Point = {
+  __typename?: 'Point';
+  value: Scalars['String'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  crossword: Crossword;
   test: Test;
 };
 
@@ -94,6 +109,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Crossword: ResolverTypeWrapper<Crossword>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Point: ResolverTypeWrapper<Point>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Test: ResolverTypeWrapper<Test>;
@@ -102,12 +120,30 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Crossword: Crossword;
+  Int: Scalars['Int'];
+  Point: Point;
   Query: {};
   String: Scalars['String'];
   Test: Test;
 };
 
+export type CrosswordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Crossword'] = ResolversParentTypes['Crossword']> = {
+  grid?: Resolver<Array<ResolversTypes['Point']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PointResolvers<ContextType = any, ParentType extends ResolversParentTypes['Point'] = ResolversParentTypes['Point']> = {
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  x?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  y?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  crossword?: Resolver<ResolversTypes['Crossword'], ParentType, ContextType>;
   test?: Resolver<ResolversTypes['Test'], ParentType, ContextType>;
 };
 
@@ -118,6 +154,8 @@ export type TestResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  Crossword?: CrosswordResolvers<ContextType>;
+  Point?: PointResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Test?: TestResolvers<ContextType>;
 };
