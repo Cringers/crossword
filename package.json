@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn --cwd backend dev & yarn --cwd frontend react-scripts start",
+    "start": "yarn --cwd backend dev & yarn --cwd frontend start",
     "build": "yarn --cwd frontend build"
   }
 }
