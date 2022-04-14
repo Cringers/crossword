@@ -24,6 +24,9 @@ export type Crossword = {
 
 export type Point = {
   __typename?: 'Point';
+  across: Scalars['Boolean'];
+  first: Scalars['Boolean'];
+  hint: Scalars['Int'];
   value: Scalars['String'];
   x: Scalars['Int'];
   y: Scalars['Int'];

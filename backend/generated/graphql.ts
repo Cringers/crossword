@@ -22,6 +22,9 @@ export type Crossword = {
 
 export type Point = {
   __typename?: 'Point';
+  across: Scalars['Boolean'];
+  first: Scalars['Boolean'];
+  hint: Scalars['Int'];
   value: Scalars['String'];
   x: Scalars['Int'];
   y: Scalars['Int'];
@@ -136,6 +139,9 @@ export type CrosswordResolvers<ContextType = any, ParentType extends ResolversPa
 };
 
 export type PointResolvers<ContextType = any, ParentType extends ResolversParentTypes['Point'] = ResolversParentTypes['Point']> = {
+  across?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  first?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hint?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   x?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   y?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
