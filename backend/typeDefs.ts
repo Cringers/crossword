@@ -1,25 +1,28 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express';
 
 export const typeDefs = gql`
-    type Test {
+  type Test {
     name: String!
     id: String!
-    }
+  }
 
-    type Query{
-    test: Test! 
+  type Query {
+    test: Test!
     crossword: Crossword!
-    }
+  }
 
-    type Crossword {
-        name: String!
-        id: String! 
-        grid: [Point!]!
-    }   
+  type Crossword {
+    name: String!
+    id: String!
+    grid: [Point!]!
+  }
 
-    type Point {
-        x: Int!
-        y: Int!
-        value: String! 
-    }
-`
+  type Point {
+    x: Int!
+    y: Int!
+    value: String!
+    hint: Int!
+    first: Boolean!
+    across: Boolean!
+  }
+`;
