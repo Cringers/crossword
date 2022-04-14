@@ -26,7 +26,6 @@ const CrosswordBoxContainer = ({ value }: CrosswordBoxContainerProps) => {
     }
     if (event.currentTarget.nextSibling) {
       (event.currentTarget.nextSibling as HTMLElement).focus();
-    } else {
     }
     if (inputValue.join('') === value) {
       alert('success');
@@ -37,11 +36,9 @@ const CrosswordBoxContainer = ({ value }: CrosswordBoxContainerProps) => {
     i: number
   ) => {
     if (event.key === 'Backspace' || event.key === 'Delete') {
-      if ((event.currentTarget as HTMLElement).textContent === '') {
-        (event.currentTarget?.previousSibling as HTMLElement).focus();
-      }
       (event.currentTarget as HTMLElement).textContent = '';
       inputValue[i] = '';
+      (event.currentTarget?.previousSibling as HTMLElement).focus();
       return;
     }
     if (event.key === 'ArrowUp' && event.currentTarget.previousSibling) {
