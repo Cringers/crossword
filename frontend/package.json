@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:prod": "PORT=443 HTTPS=true SSL_CRT_FILE=/home/opc/certificate.crt SSL_KEY_FILE=/home/opc/private.key react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
