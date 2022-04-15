@@ -13,7 +13,7 @@ import {
 
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: 'https://cring.info/graphql',
   cache: new InMemoryCache(),
 });
 
