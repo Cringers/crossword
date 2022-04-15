@@ -12,8 +12,16 @@ import * as cors from 'cors';
 
 async function startApolloServer(typeDefs, resolvers){
   const app = express()
+  const { createProxyMiddleware } = require('http-proxy-middleware');
+  app.use(
+    '/graphql',
+    createProxyMiddleware({
+      target: `http://localhost:${CONFIG.BACKEND_PORT}/graphql`,
+      changeOrigin: true,
+    })
+  );
+
   const backendServer = http.createServer(app);
-  
   const apiServer = new ApolloServer({ 
     typeDefs,
     resolvers,
@@ -28,7 +36,6 @@ async function startApolloServer(typeDefs, resolvers){
   console.log(`🚀 Server ready at http://localhost:${CONFIG.BACKEND_PORT}${apiServer.graphqlPath}`)
 
   var frontendServer;
-  
   switch (CONFIG.STAGE) {
     case 'production':
       const key  = fs.readFileSync(CONFIG.SSL_KEY, 'utf8');
