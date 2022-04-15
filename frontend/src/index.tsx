@@ -4,11 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { CONFIG } from '@crossword/config'
 const { NODE_ENV } = process.env;
 const client = new ApolloClient({
   uri:
     NODE_ENV === 'development'
-      ? 'http://localhost:4000/graphql'
+      ? `http://localhost:${CONFIG.BACKEND_PORT}/graphql`
       : 'https://cring.info/graphql',
   cache: new InMemoryCache(),
 });

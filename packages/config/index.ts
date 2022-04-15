@@ -1,8 +1,8 @@
 const { NODE_ENV } = process.env;
 export const CONFIG = Object.freeze({
   STAGE: NODE_ENV,
-  PORT: NODE_ENV === 'development' ? 4000 : 443,
-  // HTTPS: STAGE === 'prod',
-  // SSL_CRT_FILE: STAGE === 'prod' ? '/home/opc/certificate.crt' : '',
-  // SSL_KEY_FILE: STAGE === 'prod' ? '/home/opc/private.key' : '',
+  FRONTEND_PORT: NODE_ENV === 'development' ? 3000 : 443,
+  BACKEND_PORT: 4000,
+  SSL_CERT: NODE_ENV === 'production' ? '/home/opc/certificate.crt' : '',
+  SSL_KEY: NODE_ENV === 'production' ? '/home/opc/private.key' : '',
 });
