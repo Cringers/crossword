@@ -3,17 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
-
-
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+const { NODE_ENV } = process.env;
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri:
+    NODE_ENV === 'development'
+      ? 'http://localhost:4000/graphql'
+      : 'https://cring.info/graphql',
   cache: new InMemoryCache(),
 });
 
