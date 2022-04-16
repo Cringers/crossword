@@ -17,9 +17,8 @@
   },
   "scripts": {
     "start": "ts-node-dev app.ts",
-    "prestart:prod": "yarn build",
-    "start:prod": "node app.js",
-    "build": "tsc ./app.ts",
+    "start:prod": "ts-node --transpile-only app.js",
+    "build": "tsc --build ./app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "graphql-codegen --config codegen.yml"
   },
