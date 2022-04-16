@@ -11,9 +11,9 @@ import { CONFIG } from '@crossword/config';
 import * as cors from 'cors';
 
 async function startApolloServer(typeDefs, resolvers){
-  const app = express()
+  const frontendApp = express()
   const { createProxyMiddleware } = require('http-proxy-middleware');
-  app.use(
+  frontendApp.use(
     '/graphql',
     createProxyMiddleware({
       target: `http://localhost:${CONFIG.BACKEND_PORT}/graphql`,
@@ -21,17 +21,18 @@ async function startApolloServer(typeDefs, resolvers){
     })
   );
 
-  const backendServer = http.createServer(app);
+  const backendApp = express()
+  const backendServer = http.createServer(backendApp);
   const apiServer = new ApolloServer({ 
     typeDefs,
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer: backendServer })],
   });
-  
-  app.use(cors()); //TODO pick CORS policy besides *
+  backendApp.use(cors());
+  frontendApp.use(cors()); //TODO pick CORS policy besides *
   
   await apiServer.start();
-  apiServer.applyMiddleware({ app });
+  apiServer.applyMiddleware({ app: backendApp });
   await new Promise<void>(resolve => backendServer.listen({ port: CONFIG.BACKEND_PORT}, resolve));
   console.log(`🚀 Server ready at http://localhost:${CONFIG.BACKEND_PORT}${apiServer.graphqlPath}`)
 
@@ -42,12 +43,12 @@ async function startApolloServer(typeDefs, resolvers){
       const cert = fs.readFileSync(CONFIG.SSL_CERT, 'utf8');
       const credentials = {key, cert};
       
-      frontendServer = https.createServer(credentials, app)
+      frontendServer = https.createServer(credentials, frontendApp)
       
-      app.get('/', (req, res) => {
+      frontendApp.get('/', (req, res) => {
         res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
       })
-      app.use(express.static(path.join(__dirname, '../frontend/build')));
+      frontendApp.use(express.static(path.join(__dirname, '../frontend/build')));
       await new Promise<void>(resolve => frontendServer.listen({ port: CONFIG.FRONTEND_PORT}))
       console.log(`🚀 Server ready at http://localhost:${CONFIG.FRONTEND_PORT}/`)
       break;
