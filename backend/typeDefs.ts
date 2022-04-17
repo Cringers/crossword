@@ -14,7 +14,12 @@ export const typeDefs = gql`
   type Crossword {
     name: String!
     id: String!
-    grid: [Point!]!
+    grid: Grid!
+  }
+
+  type Grid {
+    dimension: Int!
+    points: [Point!]! 
   }
 
   type Point {
