@@ -11,6 +11,7 @@ import { CONFIG } from '@crossword/config';
 import * as cors from 'cors';
 import { AppDataSource } from '@crossword/db';
 import { Crossword } from "./entities/crossword";
+import "reflect-metadata";
 
 async function startApolloServer(typeDefs, resolvers){
   const frontendApp = express()
@@ -68,7 +69,8 @@ AppDataSource.initialize().then(async () => {
 
   console.log("what");
   
-  const xword:Crossword = {name: "cringe"}
+  const xword:Crossword = new Crossword()
+  xword.name = "cringe"
 
   AppDataSource.manager.save(xword)
 
