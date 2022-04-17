@@ -11,6 +11,7 @@ import {
 function App() {
   const { data } = useQuery<TestQuery>(TestDocument);
   const { data: grid, loading } = useCrosswordQuery();
+
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>Ethan is?</h1>

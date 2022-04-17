@@ -11,6 +11,9 @@
     "start": "NODE_ENV=development yarn --cwd backend start & yarn --cwd frontend start",
     "prestart:prod": "yarn",
     "start:prod": "NODE_ENV=production yarn --cwd backend start:prod",
+    "start": "NODE_ENV=development yarn --cwd backend dev & yarn --cwd frontend start",
+    "start:backend": "NODE_ENV=development yarn --cwd backend dev",
+    "start:frontend": "NODE_ENV=development yarn --cwd frontend start",
     "build": "yarn --cwd frontend build && yarn --cwd backend build",
     "generate": "yarn --cwd frontend generate && yarn --cwd backend generate"
   }

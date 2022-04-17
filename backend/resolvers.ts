@@ -1,3 +1,5 @@
+import { AppDataSource } from '@crossword/db';
+import { Crossword as CrosswordEntity} from './entities/crossword';
 import { Resolvers, Test, Crossword } from './generated/graphql';
 
 export const resolvers: Resolvers = {
@@ -8,9 +10,10 @@ export const resolvers: Resolvers = {
         id: 'balls',
       };
     },
-    crossword: (): Crossword => {
+    crossword: async (): Promise<Crossword> => {
+      let name : string = (await AppDataSource.manager.findOneBy(CrosswordEntity,{name: "cringe"})).name
       return {
-        name: 'someName',
+        name,
         id: 'someId',
         grid: [
           {

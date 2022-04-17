@@ -9,8 +9,12 @@ import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs';
 import { CONFIG } from '@crossword/config';
 import * as cors from 'cors';
+import { AppDataSource } from '@crossword/db';
+import { Crossword } from "./entities/crossword";
+import "reflect-metadata";
 
 async function startApolloServer(typeDefs, resolvers){
+  console.log("Starting Apollo Server")
   const frontendApp = express()
   const { createProxyMiddleware } = require('http-proxy-middleware');
   frontendApp.use(
@@ -60,4 +64,12 @@ async function startApolloServer(typeDefs, resolvers){
   }
 }
 
-startApolloServer(typeDefs, resolvers);
+console.log("Connecting to ATP database")
+AppDataSource.initialize().then(async () => {
+  
+  const xword:Crossword = new Crossword()
+  xword.name = "cringe"
+  AppDataSource.manager.save(xword)
+
+  await startApolloServer(typeDefs, resolvers)
+});
