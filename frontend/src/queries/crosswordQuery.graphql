@@ -1,15 +1,12 @@
-query Test {
-  test {
-    name
-  }
-}
-
 query Crossword {
   crossword {
     name
     grid {
-      x
-      y
+      dimension
+      points {
+        x
+        y
+      }
     }
   }
 }

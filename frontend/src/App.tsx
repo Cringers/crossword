@@ -1,22 +1,14 @@
-import React from 'react';
 import CrosswordBoxContainer from './components/VerticalWord/CrosswordBoxContainer';
-import { useQuery } from '@apollo/client';
-import { TestQuery, TestDocument } from './generated/generated';
-import {
-  CrosswordQuery,
-  CrosswordDocument,
-  useCrosswordQuery,
-} from './generated/generated';
+import {Crossword, useCrosswordQuery } from './generated/generated';
 
 function App() {
-  const { data } = useQuery<TestQuery>(TestDocument);
-  const { data: grid, loading } = useCrosswordQuery();
+  const { data, loading } = useCrosswordQuery();
 
   return (
     <>
-      <h1 style={{ textAlign: 'center' }}>Ethan is?</h1>
+      <h1 style={{ textAlign: 'center' }}>{data?.crossword.name}</h1>
       {!loading && (
-        <CrosswordBoxContainer value={grid?.crossword.name as string} />
+        <CrosswordBoxContainer crossword={data?.crossword as Crossword } />
       )}
       ;
     </>
