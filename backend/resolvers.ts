@@ -15,7 +15,9 @@ export const resolvers: Resolvers = {
       return {
         name,
         id: 'someId',
-        grid: [
+        grid: {
+         dimension: 2,
+         points: [
           {
             x: 0,
             y: 0,
@@ -24,7 +26,32 @@ export const resolvers: Resolvers = {
             across: true,
             hint: 1,
           },
-        ],
+          {
+            x: 1,
+            y: 0,
+            value: 'd',
+            first: true,
+            across: true,
+            hint: 1,
+          },
+          {
+            x: 0,
+            y: 1,
+            value: 'd',
+            first: true,
+            across: true,
+            hint: 1,
+          },
+          {
+            x: 1,
+            y: 1,
+            value: 'd',
+            first: true,
+            across: true,
+            hint: 1,
+          },
+        ]
+      },
       };
     },
   },

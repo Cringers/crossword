@@ -22,9 +22,9 @@ export type CrossWordInputBoxProps = {
   onInput?: (event: FormEvent<HTMLDivElement>) => void;
   onDelete: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 };
-const CrosswordInput = ({ onDelete, onInput }: CrossWordInputBoxProps) => {
+const CrosswordInput = ({ onDelete, onInput}: CrossWordInputBoxProps) => {
   return (
-    <CrosswordBox contentEditable onInput={onInput} onKeyDown={onDelete} />
+    <CrosswordBox contentEditable onInput={onInput} onKeyDown={onDelete}/>
   );
 };
 const CrosswordInputBox = memo(CrosswordInput);

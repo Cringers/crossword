@@ -15,9 +15,15 @@ export type Scalars = {
 
 export type Crossword = {
   __typename?: 'Crossword';
-  grid: Array<Point>;
+  grid: Grid;
   id: Scalars['String'];
   name: Scalars['String'];
+};
+
+export type Grid = {
+  __typename?: 'Grid';
+  dimension: Scalars['Int'];
+  points: Array<Point>;
 };
 
 export type Point = {
@@ -113,6 +119,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Crossword: ResolverTypeWrapper<Crossword>;
+  Grid: ResolverTypeWrapper<Grid>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Point: ResolverTypeWrapper<Point>;
   Query: ResolverTypeWrapper<{}>;
@@ -124,6 +131,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Crossword: Crossword;
+  Grid: Grid;
   Int: Scalars['Int'];
   Point: Point;
   Query: {};
@@ -132,9 +140,15 @@ export type ResolversParentTypes = {
 };
 
 export type CrosswordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Crossword'] = ResolversParentTypes['Crossword']> = {
-  grid?: Resolver<Array<ResolversTypes['Point']>, ParentType, ContextType>;
+  grid?: Resolver<ResolversTypes['Grid'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GridResolvers<ContextType = any, ParentType extends ResolversParentTypes['Grid'] = ResolversParentTypes['Grid']> = {
+  dimension?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  points?: Resolver<Array<ResolversTypes['Point']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -161,6 +175,7 @@ export type TestResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Crossword?: CrosswordResolvers<ContextType>;
+  Grid?: GridResolvers<ContextType>;
   Point?: PointResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Test?: TestResolvers<ContextType>;
