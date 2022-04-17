@@ -19,9 +19,10 @@ export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
   // Initialize empty crossword grid 
-  const grid : Array<Array<string>> = new Array(crossword.grid.dimension);
+  const dimension : number = crossword.grid.dimension;
+  const grid : Array<Array<string>> = new Array(dimension);
   for(var i = 0; i < grid.length; i++){
-    grid[i] = new Array(crossword.grid.dimension)
+    grid[i] = new Array(dimension)
   }
   // Fill crossword grid with points
   crossword.grid.points.forEach(point => 
@@ -32,8 +33,8 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
     event: FormEvent<HTMLDivElement>,
     cellNumber: number
   ) => {
-    var columnIndex = cellNumber % crossword.grid.dimension
-    var rowIndex = Math.floor(cellNumber/crossword.grid.dimension)
+    var columnIndex = cellNumber % dimension
+    var rowIndex = Math.floor(cellNumber/dimension)
 
     var input : string | undefined = event?.currentTarget?.textContent?.at(0)
     grid[columnIndex][rowIndex] = input ? input : "";
@@ -48,8 +49,8 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
     event: React.KeyboardEvent<HTMLDivElement>,
     cellNumber: number
   ) => {
-    var columnIndex = cellNumber % crossword.grid.dimension
-    var rowIndex = Math.floor(cellNumber/crossword.grid.dimension)
+    var columnIndex = cellNumber % dimension
+    var rowIndex = Math.floor(cellNumber/dimension)
 
     if (event.key === 'Backspace' || event.key === 'Delete') {
       (event.currentTarget as HTMLElement).textContent = '';
@@ -66,15 +67,16 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
   return (
     <CrosswordContainer>
-      {grid.map( (row, i) => 
-        <CrosswordRow>
-          {row.map( (column, j) => 
-            <CrosswordInputBox
-              key={i + j}
-              onInput={(event) => crosswordBoxInputHandler(event,  i + j)}
-              onDelete={(event) => keyStrokeHandler(event, i + j)}
+      {grid.map( (row, i ) => 
+        <CrosswordRow key={i}>
+          {row.map( (column, j) =>{ 
+            let cellIndex = i*dimension + j
+            return <CrosswordInputBox
+              key={cellIndex}
+              onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
+              onDelete={(event) => keyStrokeHandler(event, cellIndex)}
             />
-          )}
+           } )}
         </CrosswordRow>
       )}
     </CrosswordContainer>

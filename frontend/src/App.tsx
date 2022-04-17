@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      <h1 style={{ textAlign: 'center' }}>Ethan is?</h1>
+      <h1 style={{ textAlign: 'center' }}>{data?.crossword.name}</h1>
       {!loading && (
         <CrosswordBoxContainer crossword={data?.crossword as Crossword } />
       )}
