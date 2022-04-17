@@ -14,6 +14,7 @@ import { Crossword } from "./entities/crossword";
 import "reflect-metadata";
 
 async function startApolloServer(typeDefs, resolvers){
+  console.log("Starting Apollo Server")
   const frontendApp = express()
   const { createProxyMiddleware } = require('http-proxy-middleware');
   frontendApp.use(
@@ -63,18 +64,12 @@ async function startApolloServer(typeDefs, resolvers){
   }
 }
 
-console.log("first")
-
+console.log("Connecting to ATP database")
 AppDataSource.initialize().then(async () => {
-
-  console.log("what");
   
   const xword:Crossword = new Crossword()
   xword.name = "cringe"
-
   AppDataSource.manager.save(xword)
-
-  console.log("hello");
 
   await startApolloServer(typeDefs, resolvers)
 });
