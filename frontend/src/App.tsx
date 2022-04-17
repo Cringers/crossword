@@ -1,7 +1,6 @@
 import React from 'react';
 import CrosswordBoxContainer from './components/VerticalWord/CrosswordBoxContainer';
 import { useQuery } from '@apollo/client';
-import { TestQuery, TestDocument } from './generated/generated';
 import {
   CrosswordQuery,
   CrosswordDocument,
@@ -9,7 +8,6 @@ import {
 } from './generated/generated';
 
 function App() {
-  const { data } = useQuery<TestQuery>(TestDocument);
   const { data: grid, loading } = useCrosswordQuery();
 
   return (
