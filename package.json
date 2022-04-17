@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "start": "NODE_ENV=development yarn --cwd backend dev & yarn --cwd frontend start",
+    "start:backend": "NODE_ENV=development yarn --cwd backend dev",
+    "start:frontend": "NODE_ENV=development yarn --cwd frontend start",
     "start:prod": "NODE_ENV=production yarn --cwd backend dev",
     "build": "yarn --cwd frontend build",
     "generate": "yarn --cwd frontend generate && yarn --cwd backend generate"
