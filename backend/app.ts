@@ -9,6 +9,8 @@ import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs';
 import { CONFIG } from '@crossword/config';
 import * as cors from 'cors';
+import { AppDataSource } from '@crossword/db';
+import { Crossword } from "./entities/crossword";
 
 async function startApolloServer(typeDefs, resolvers){
   const frontendApp = express()
@@ -60,4 +62,17 @@ async function startApolloServer(typeDefs, resolvers){
   }
 }
 
-startApolloServer(typeDefs, resolvers);
+console.log("first")
+
+AppDataSource.initialize().then(async () => {
+
+  console.log("what");
+  
+  const xword:Crossword = {name: "cringe"}
+
+  AppDataSource.manager.save(xword)
+
+  console.log("hello");
+
+  await startApolloServer(typeDefs, resolvers)
+});

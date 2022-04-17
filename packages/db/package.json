@@ -1,5 +1,5 @@
 {
-  "name": "@crossword/config",
+  "name": "@crossword/db",
   "version": "1.0.0",
   "type": "module",
   "main": "index.ts"
