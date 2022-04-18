@@ -6,8 +6,8 @@ import * as http from 'http';
 import * as https from 'https';
 import * as path from 'path';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { CONFIG } from '@crossword/config';
 import * as cors from 'cors';
+import { CONFIG } from '@crossword/config';
 import { AppDataSource } from '@crossword/db';
 import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs';
@@ -88,5 +88,6 @@ AppDataSource.initialize().then(async () => {
    xword.name = 'cringe';
    AppDataSource.manager.save(xword);
 
-   await startApolloServer(typeDefs, resolvers);
+  await startApolloServer(typeDefs, resolvers)
 });
+
