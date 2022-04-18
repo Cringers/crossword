@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CrosswordInputBox from './CrosswordInputBox';
 import { Crossword } from '../../generated/generated';
 import { useState } from 'react';
+import { fromPromise } from '@apollo/client';
 
 
 const CrosswordContainer = styled.div`
@@ -21,8 +22,8 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
   // Initialize empty crossword grid 
   const dimension : number = crossword.grid.dimension;
   let answer = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill('')) 
-  const [grid, setMyArray] = useState<Array<Array<string>>>(answer)
-  
+  const [grid, setGrid] = useState<Array<Array<string>>>(answer)
+
   const crosswordBoxInputHandler = (
     event: FormEvent<HTMLDivElement>,
     cellNumber: number
@@ -30,8 +31,17 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
     var columnIndex = cellNumber % dimension
     var rowIndex = Math.floor(cellNumber/dimension)
 
-    var input : string | undefined = event?.currentTarget?.textContent?.at(0)
-    grid[columnIndex][rowIndex] = input ? input : "";
+    var input : string | undefined = event?.currentTarget?.textContent?.at(0);
+    setGrid(currentState => {
+      let newState = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill(''));
+      for(let i = 0; i < dimension; i++){
+        for(let j = 0; j < dimension; j++){
+          newState[i][j] = currentState[i][j]
+        }
+      }
+      newState[columnIndex][rowIndex] = input ? input : "";
+      return newState;
+    });
 
     if (event.currentTarget.nextSibling) {
       (event.currentTarget.nextSibling as HTMLElement).focus();
@@ -48,7 +58,19 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
     if (event.key === 'Backspace' || event.key === 'Delete') {
       (event.currentTarget as HTMLElement).textContent = '';
-      grid[columnIndex][rowIndex] = '';
+
+      setGrid(currentState => {
+        let newState = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill(''));
+        for(let i = 0; i < dimension; i++){
+          for(let j = 0; j < dimension; j++){
+            newState[i][j] = currentState[i][j]
+          }
+        }
+        newState[columnIndex][rowIndex] =  "";
+        return newState;
+      });
+
+
       (event.currentTarget?.previousSibling as HTMLElement).focus();
       return;
     }
@@ -65,6 +87,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
         <CrosswordRow key={i}>
           {row.map( (column : any, j : number) =>{ 
             let cellIndex = i*dimension + j
+            console.log("grid", grid[j][i])
             return <CrosswordInputBox
               key={cellIndex}
               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
