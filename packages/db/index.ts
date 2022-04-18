@@ -15,7 +15,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
-    entityPrefix: CONFIG.STAGE,
+    entityPrefix: CONFIG.STAGE === "development" ? CONFIG.STAGE + "_" : "",
     entities: [Crossword],
     subscribers: [],
     migrations: []
