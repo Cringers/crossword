@@ -5,13 +5,14 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 import * as path from 'path';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as cors from 'cors';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { CONFIG } from '@crossword/config';
 import { AppDataSource } from '@crossword/db';
+import { crosswordParser} from '@crossword/parser'
+import { Crossword } from "./entities/crossword";
 import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs';
-import { Crossword } from './entities/crossword';
 import 'reflect-metadata';
 
 async function startApolloServer(localTypeDefs, localResolvers) {
@@ -81,13 +82,17 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    }
 }
 
-// eslint-disable-next-line no-console
-console.log('Connecting to ATP database');
-AppDataSource.initialize().then(async () => {
-   const xword: Crossword = new Crossword();
-   xword.name = 'cringe';
-   AppDataSource.manager.save(xword);
+<<<<<<< HEAD
+console.log("Connecting to ATP database")
+async function start() {
 
-  await startApolloServer(typeDefs, resolvers)
-});
+  AppDataSource.initialize().then(async () => {
+    let currentCrossword = "cringe"
+    let xword : Crossword = crosswordParser(currentCrossword)
+    //AppDataSource.manager.delete(Crossword, {name: xword.name})
+    AppDataSource.manager.save(Crossword, xword)
 
+    await startApolloServer(typeDefs, resolvers)
+  });
+}
+start()

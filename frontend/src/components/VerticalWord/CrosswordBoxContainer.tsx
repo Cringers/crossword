@@ -3,6 +3,7 @@ import React, { FormEvent } from 'react';
 import styled from 'styled-components';
 import CrosswordInputBox from './CrosswordInputBox';
 import { Crossword } from '../../generated/generated';
+import { useState } from 'react';
 
 
 const CrosswordContainer = styled.div`
@@ -16,19 +17,12 @@ const CrosswordRow = styled.div`
 `;
 
 export type CrosswordBoxContainerProps = { crossword: Crossword };
-const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
-
+const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {  
   // Initialize empty crossword grid 
   const dimension : number = crossword.grid.dimension;
-  const grid : Array<Array<string>> = new Array(dimension);
-  for(var i = 0; i < grid.length; i++){
-    grid[i] = new Array(dimension)
-  }
-  // Fill crossword grid with points
-  crossword.grid.points.forEach(point => 
-    grid[point.x][point.y] = point.value  
-  )
-
+  let answer = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill('')) 
+  const [grid, setMyArray] = useState<Array<Array<string>>>(answer)
+  
   const crosswordBoxInputHandler = (
     event: FormEvent<HTMLDivElement>,
     cellNumber: number
@@ -67,9 +61,9 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
   return (
     <CrosswordContainer>
-      {grid.map( (row, i ) => 
+      {grid.map( (row : any, i : number) => 
         <CrosswordRow key={i}>
-          {row.map( (column, j) =>{ 
+          {row.map( (column : any, j : number) =>{ 
             let cellIndex = i*dimension + j
             return <CrosswordInputBox
               key={cellIndex}
