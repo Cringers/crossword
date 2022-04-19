@@ -1,3 +1,3 @@
 export class Crossword {
-    name: string
+   name: string;
 }
