@@ -1,12 +1,12 @@
 query Crossword {
-  crossword {
-    name
-    grid {
-      dimension
-      points {
-        x
-        y
+   crossword {
+      name
+      grid {
+         dimension
+         points {
+            x
+            y
+         }
       }
-    }
-  }
+   }
 }
