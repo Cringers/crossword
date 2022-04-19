@@ -39,13 +39,6 @@ export type Point = {
 export type Query = {
   __typename?: 'Query';
   crossword: Crossword;
-  test: Test;
-};
-
-export type Test = {
-  __typename?: 'Test';
-  id: Scalars['String'];
-  name: Scalars['String'];
 };
 
 
@@ -124,7 +117,6 @@ export type ResolversTypes = {
   Point: ResolverTypeWrapper<Point>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Test: ResolverTypeWrapper<Test>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -136,7 +128,6 @@ export type ResolversParentTypes = {
   Point: Point;
   Query: {};
   String: Scalars['String'];
-  Test: Test;
 };
 
 export type CrosswordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Crossword'] = ResolversParentTypes['Crossword']> = {
@@ -164,13 +155,6 @@ export type PointResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   crossword?: Resolver<ResolversTypes['Crossword'], ParentType, ContextType>;
-  test?: Resolver<ResolversTypes['Test'], ParentType, ContextType>;
-};
-
-export type TestResolvers<ContextType = any, ParentType extends ResolversParentTypes['Test'] = ResolversParentTypes['Test']> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
@@ -178,6 +162,5 @@ export type Resolvers<ContextType = any> = {
   Grid?: GridResolvers<ContextType>;
   Point?: PointResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Test?: TestResolvers<ContextType>;
 };
 
