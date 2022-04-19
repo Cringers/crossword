@@ -41,19 +41,12 @@ export type Point = {
 export type Query = {
   __typename?: 'Query';
   crossword: Crossword;
-  test: Test;
-};
-
-export type Test = {
-  __typename?: 'Test';
-  id: Scalars['String'];
-  name: Scalars['String'];
 };
 
 export type CrosswordQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CrosswordQuery = { __typename?: 'Query', crossword: { __typename?: 'Crossword', name: string, grid: { __typename?: 'Grid', dimension: number, points: Array<{ __typename?: 'Point', x: number, y: number }> } } };
+export type CrosswordQuery = { __typename?: 'Query', crossword: { __typename?: 'Crossword', name: string, grid: { __typename?: 'Grid', dimension: number, points: Array<{ __typename?: 'Point', x: number, y: number, value: string }> } } };
 
 
 export const CrosswordDocument = gql`
@@ -65,6 +58,7 @@ export const CrosswordDocument = gql`
       points {
         x
         y
+        value
       }
     }
   }

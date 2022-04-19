@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useMemo } from 'react';
 
 import styled from 'styled-components';
 import CrosswordInputBox from './CrosswordInputBox';
@@ -22,6 +22,32 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
   // Initialize empty crossword grid 
   const dimension : number = crossword.grid.dimension;
   const [grid, setGrid] = useState<string[][]>(Array(dimension).fill(Array(dimension).fill('')))
+  const answer = useMemo<string[][]>(() => {
+    console.log(crossword.grid.points)
+    let tempAnswer : string [][] = Array(dimension).fill(Array(dimension).fill(''));
+    console.log(tempAnswer)
+    crossword.grid.points.forEach((point) => {
+       console.log("tempAnswerBefore" + point.value,tempAnswer)
+       tempAnswer[point.x][point.y] = point.value
+       console.log("tempAnswerAfter" + point.value,tempAnswer)
+    })
+      return tempAnswer
+  }, [crossword] )
+
+
+  /*
+  useEffect(() => {
+       console.log(crossword.grid.points)
+       let tempAnswer : string [][] = Array(dimension).fill(Array(dimension).fill(''));
+       console.log(tempAnswer)
+       crossword.grid.points.forEach((point) => {
+          console.log("tempAnswerBefore" + point.value,tempAnswer)
+          tempAnswer[point.x][point.y] = point.value
+          console.log("tempAnswerAfter" + point.value,tempAnswer)
+       })
+       setAnswer(tempAnswer)
+  }, [crossword]);
+*/
 
   const crosswordBoxInputHandler = (
     event: FormEvent<HTMLDivElement>,
@@ -32,11 +58,17 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
     let input : string | undefined = event?.currentTarget?.textContent?.at(0);
     setGrid(currentState => {
+      let areEqual = true;
       let newState : string [][] = Array(dimension).fill(Array(dimension).fill(''));
       for(let i = 0; i < dimension; i++){
         for(let j = 0; j < dimension; j++){
+          areEqual &&= (answer[i][j].toLocaleLowerCase() == currentState[i][j].toLocaleLowerCase())
           newState[i][j] = currentState[i][j]
         }
+      }
+      console.log("Answer:",answer)
+      if(areEqual){
+        console.log("Equal!")
       }
       newState[columnIndex][rowIndex] = input ? input : "";
       return newState;
@@ -86,7 +118,6 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
         <CrosswordRow key={i}>
           {row.map( (column : string, j : number) =>{ 
             let cellIndex = i*dimension + j
-            console.log("grid", grid[j][i])
             return <CrosswordInputBox
               key={cellIndex}
               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
