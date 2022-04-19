@@ -6,9 +6,8 @@ export const resolvers: Resolvers = {
   Query: {
     crossword: async (): Promise<Crossword> => {
       let crossword : CrosswordEntity = (await AppDataSource.manager.findOneBy(CrosswordEntity,{name: "cringe"}))
-      console.log(crossword)
       let name : string = crossword.name
-      let points : Array<Point> = []
+      let points : Point[] = []
       crossword.grid.forEach( (row : Array<string>, y)  => {
         row.forEach((value, x) => {
           const point : Point = {

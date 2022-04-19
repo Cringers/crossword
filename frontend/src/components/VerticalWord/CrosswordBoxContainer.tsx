@@ -21,19 +21,18 @@ export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {  
   // Initialize empty crossword grid 
   const dimension : number = crossword.grid.dimension;
-  let answer = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill('')) 
-  const [grid, setGrid] = useState<Array<Array<string>>>(answer)
+  const [grid, setGrid] = useState<string[][]>(Array(dimension).fill(Array(dimension).fill('')))
 
   const crosswordBoxInputHandler = (
     event: FormEvent<HTMLDivElement>,
     cellNumber: number
   ) => {
-    var columnIndex = cellNumber % dimension
-    var rowIndex = Math.floor(cellNumber/dimension)
+    let columnIndex = cellNumber % dimension
+    let rowIndex = Math.floor(cellNumber/dimension)
 
-    var input : string | undefined = event?.currentTarget?.textContent?.at(0);
+    let input : string | undefined = event?.currentTarget?.textContent?.at(0);
     setGrid(currentState => {
-      let newState = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill(''));
+      let newState : string [][] = Array(dimension).fill(Array(dimension).fill(''));
       for(let i = 0; i < dimension; i++){
         for(let j = 0; j < dimension; j++){
           newState[i][j] = currentState[i][j]
@@ -53,14 +52,14 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
     event: React.KeyboardEvent<HTMLDivElement>,
     cellNumber: number
   ) => {
-    var columnIndex = cellNumber % dimension
-    var rowIndex = Math.floor(cellNumber/dimension)
+    let columnIndex = cellNumber % dimension
+    let rowIndex = Math.floor(cellNumber/dimension)
 
     if (event.key === 'Backspace' || event.key === 'Delete') {
       (event.currentTarget as HTMLElement).textContent = '';
 
       setGrid(currentState => {
-        let newState = Array<Array<string>>(dimension).fill(Array<string>(dimension).fill(''));
+        let newState : string [][] = Array(dimension).fill(Array(dimension).fill(''));
         for(let i = 0; i < dimension; i++){
           for(let j = 0; j < dimension; j++){
             newState[i][j] = currentState[i][j]
@@ -83,9 +82,9 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
   return (
     <CrosswordContainer>
-      {grid.map( (row : any, i : number) => 
+      {grid.map( (row : string[], i : number) => 
         <CrosswordRow key={i}>
-          {row.map( (column : any, j : number) =>{ 
+          {row.map( (column : string, j : number) =>{ 
             let cellIndex = i*dimension + j
             console.log("grid", grid[j][i])
             return <CrosswordInputBox
