@@ -82,7 +82,6 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    }
 }
 
-<<<<<<< HEAD
 console.log("Connecting to ATP database")
 async function start() {
 
