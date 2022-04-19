@@ -10,7 +10,6 @@ function App() {
       {!loading && (
         <CrosswordBoxContainer crossword={data?.crossword as Crossword } />
       )}
-      ;
     </>
   );
 }
