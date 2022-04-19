@@ -3,6 +3,7 @@ import React from "react";
 import { memo, FormEvent } from "react";
 
 const CrosswordBox = styled.div`
+  text-transform: uppercase;
   background-color: white;
   border-top: black 1px solid;
   border-left: black 1px solid;
