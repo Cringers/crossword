@@ -1,6 +1,7 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { Crossword } from "@crossword/backend/entities/crossword"
+import { CONFIG } from "@crossword/config";
 
 export const AppDataSource = new DataSource({
     type: "oracle",
@@ -14,6 +15,7 @@ export const AppDataSource = new DataSource({
     },
     synchronize: true,
     logging: true,
+    entityPrefix: CONFIG.STAGE === "development" ? CONFIG.STAGE + "_" : "",
     entities: [Crossword],
     subscribers: [],
     migrations: []
