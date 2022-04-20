@@ -1,9 +1,9 @@
 import { gql } from 'apollo-server-express';
 
 export const typeDefs = gql`
-  type Query {
-    crossword: Crossword!
-  }
+   type Query {
+      crossword: Crossword!
+   }
 
    type Crossword {
       name: String!
