@@ -9,8 +9,8 @@ import * as cors from 'cors';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { CONFIG } from '@crossword/config';
 import { AppDataSource } from '@crossword/db';
-import { crosswordParser} from '@crossword/parser'
-import { Crossword } from "./entities/crossword";
+import { crosswordParser } from '@crossword/parser';
+import { Crossword } from './entities/crossword';
 import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs';
 import 'reflect-metadata';
@@ -32,9 +32,7 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    const apiServer = new ApolloServer({
       typeDefs: localTypeDefs,
       resolvers: localResolvers,
-      plugins: [
-         ApolloServerPluginDrainHttpServer({ httpServer: backendServer }),
-      ],
+      plugins: [ApolloServerPluginDrainHttpServer({ httpServer: backendServer })],
    });
    backendApp.use(cors());
    frontendApp.use(cors()); // TODO pick CORS policy besides *
@@ -45,11 +43,9 @@ async function startApolloServer(localTypeDefs, localResolvers) {
       backendServer.listen({ port: CONFIG.BACKEND_PORT }, resolve);
    });
    // eslint-disable-next-line no-console
-   console.log(
-      `🚀 Server ready at http://localhost:${CONFIG.BACKEND_PORT}${apiServer.graphqlPath}`,
-   );
+   console.log(`🚀 Server ready at http://localhost:${CONFIG.BACKEND_PORT}${apiServer.graphqlPath}`);
 
-   let frontendServer : https.Server;
+   let frontendServer: https.Server;
    switch (CONFIG.STAGE) {
       case 'production': {
          const key = fs.readFileSync(CONFIG.SSL_KEY, 'utf8');
@@ -61,16 +57,12 @@ async function startApolloServer(localTypeDefs, localResolvers) {
          frontendApp.get('/', (req, res) => {
             res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
          });
-         frontendApp.use(
-            express.static(path.join(__dirname, '../frontend/build')),
-         );
+         frontendApp.use(express.static(path.join(__dirname, '../frontend/build')));
          await new Promise<void>(() => {
             frontendServer.listen({ port: CONFIG.FRONTEND_PORT });
          });
          // eslint-disable-next-line no-console
-         console.log(
-            `🚀 Server ready at http://localhost:${CONFIG.FRONTEND_PORT}/`,
-         );
+         console.log(`🚀 Server ready at http://localhost:${CONFIG.FRONTEND_PORT}/`);
          break;
       }
       case 'development':
@@ -82,16 +74,16 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    }
 }
 
-console.log("Connecting to ATP database")
+// eslint-disable-next-line no-console
+console.log('Connecting to ATP database');
 async function start() {
+   AppDataSource.initialize().then(async () => {
+      const currentCrossword = 'cringe';
+      const xword: Crossword = crosswordParser(currentCrossword);
+      // AppDataSource.manager.delete(Crossword, {name: xword.name})
+      AppDataSource.manager.save(Crossword, xword);
 
-  AppDataSource.initialize().then(async () => {
-    let currentCrossword = "cringe"
-    let xword : Crossword = crosswordParser(currentCrossword)
-    //AppDataSource.manager.delete(Crossword, {name: xword.name})
-    AppDataSource.manager.save(Crossword, xword)
-
-    await startApolloServer(typeDefs, resolvers)
-  });
+      await startApolloServer(typeDefs, resolvers);
+   });
 }
-start()
+start();
