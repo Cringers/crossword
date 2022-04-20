@@ -1,6 +1,6 @@
 overwrite: true
 schema: "./typeDefs.ts"
-documents: "**/*.graphql"
+documents: null
 generates:
   ./generated/graphql.ts:
     plugins:
