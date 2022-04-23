@@ -15,8 +15,22 @@ export type Scalars = {
   Float: number;
 };
 
+export type Answer = {
+  __typename?: 'Answer';
+  answer: Scalars['String'];
+  clue: Scalars['String'];
+  key: Scalars['Int'];
+};
+
+export type Answers = {
+  __typename?: 'Answers';
+  across: Array<Answer>;
+  down: Array<Answer>;
+};
+
 export type Crossword = {
   __typename?: 'Crossword';
+  answers: Answers;
   grid: Grid;
   id: Scalars['String'];
   name: Scalars['String'];
@@ -46,7 +60,7 @@ export type Query = {
 export type CrosswordQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CrosswordQuery = { __typename?: 'Query', crossword: { __typename?: 'Crossword', name: string, grid: { __typename?: 'Grid', dimension: number, points: Array<{ __typename?: 'Point', x: number, y: number, value: string }> } } };
+export type CrosswordQuery = { __typename?: 'Query', crossword: { __typename?: 'Crossword', name: string, grid: { __typename?: 'Grid', dimension: number, points: Array<{ __typename?: 'Point', x: number, y: number, value: string }> }, answers: { __typename?: 'Answers', across: Array<{ __typename?: 'Answer', key: number, clue: string, answer: string }>, down: Array<{ __typename?: 'Answer', key: number, clue: string, answer: string }> } } };
 
 
 export const CrosswordDocument = gql`
@@ -59,6 +73,18 @@ export const CrosswordDocument = gql`
         x
         y
         value
+      }
+    }
+    answers {
+      across {
+        key
+        clue
+        answer
+      }
+      down {
+        key
+        clue
+        answer
       }
     }
   }

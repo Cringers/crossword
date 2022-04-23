@@ -54,9 +54,11 @@ function checkAnswer(currentArray : string[][], answer : string[][]) : boolean {
 export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {  
   // Initialize empty crossword grid 
+  console.log(crossword)
+
   const dimension : number = crossword.grid.dimension;
   const [grid, setGrid] = useState<string[][]>(createBlankGrid(dimension))
-  
+  console.log(crossword)
   // Initialize the answer grid 
   const answer = useMemo<string[][]>(() => {
     var tempAnswer : string [][] = createBlankGrid(dimension);

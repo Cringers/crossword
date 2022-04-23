@@ -9,6 +9,18 @@ export const typeDefs = gql`
       name: String!
       id: String!
       grid: Grid!
+      answers: Answers!
+   }
+
+   type Answers {
+      across: [Answer!]!
+      down: [Answer!]!
+   }
+
+   type Answer {
+      key: Int!
+      clue: String!
+      answer: String!
    }
 
    type Grid {

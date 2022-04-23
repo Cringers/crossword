@@ -6,7 +6,7 @@ export const resolvers: Resolvers = {
    Query: {
       crossword: async (): Promise<Crossword> => {
          const crossword: CrosswordEntity = await AppDataSource.manager.findOneBy(CrosswordEntity, { name: 'cringe' });
-         const { name } = crossword;
+         const { name, answers } = crossword;
          const points: Point[] = [];
          crossword.grid.forEach((row: Array<string>, y) => {
             row.forEach((value, x) => {
@@ -21,6 +21,7 @@ export const resolvers: Resolvers = {
                points.push(point);
             });
          });
+         console.log(crossword)
          return {
             name,
             id: 'someId',
@@ -28,6 +29,7 @@ export const resolvers: Resolvers = {
                dimension: crossword.grid.length,
                points,
             },
+            answers
          };
       },
    },
