@@ -80,7 +80,8 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
   ) => {
     let columnIndex = cellNumber % dimension
     let rowIndex = Math.floor(cellNumber/dimension)
-    let input : string | undefined = event?.currentTarget?.textContent?.at(0);
+    event.currentTarget.textContent = event?.currentTarget?.textContent?.at(0) || "";
+    let input : string  = event?.currentTarget?.textContent?.at(0) || "";
     setGrid(currentGrid => {
       var newGrid : string [][] = deepCopy(currentGrid)
       newGrid[rowIndex][columnIndex] = input ? input : currentGrid[rowIndex][columnIndex];
@@ -104,15 +105,17 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
       setGrid(currentGrid => {
         let newGrid : string [][] = deepCopy(currentGrid);
-        newGrid[columnIndex][rowIndex] =  "";
+        newGrid[rowIndex][columnIndex] =  "";
         return newGrid;
       });
-      (event.currentTarget?.previousSibling as HTMLElement).focus();
+      if(event.currentTarget?.previousSibling) {
+        (event.currentTarget?.previousSibling as HTMLElement).focus();
+      }
       return;
     }
-    if (event.key === 'ArrowUp' && event.currentTarget.previousSibling) {
+    if (event.key === 'ArrowUp' && event?.currentTarget?.previousSibling) {
       (event.currentTarget?.previousSibling as HTMLElement).focus();
-    } else if (event.key === 'ArrowDown' && event.currentTarget.nextSibling) {
+    } else if (event.key === 'ArrowDown' && event?.currentTarget?.nextSibling) {
       (event.currentTarget.nextSibling as HTMLElement).focus();
     }
   };
