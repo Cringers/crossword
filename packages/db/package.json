@@ -2,5 +2,8 @@
   "name": "@crossword/db",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.ts"
+  "main": "index.ts",
+  "dependencies": {
+    "sqlite3": "^5.0.5"
+  }
 }
