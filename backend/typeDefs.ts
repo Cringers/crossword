@@ -19,6 +19,7 @@ export const typeDefs = gql`
 
    type Answer {
       key: Int!
+      location: Point!
       clue: String!
       answer: String!
    }
