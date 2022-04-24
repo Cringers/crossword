@@ -9,7 +9,7 @@ interface Parser {
 }
 
 const crosswordParser : Parser = (crosswordName: string) => {
-    const crosswordString : string = fs.readFileSync(path.resolve(__dirname, "../../backend/crosswords/"+crosswordName+'.yml')).toString()
+    const crosswordString : string = fs.readFileSync(path.resolve(__dirname, `../../backend/crosswords/${crosswordName}.yml`)).toString()
     const crosswordEntity : Crossword = new Crossword();
     const crossword : any = yaml.load(crosswordString);
     crosswordEntity.grid = crossword.rows.map(str => str.split(''));
