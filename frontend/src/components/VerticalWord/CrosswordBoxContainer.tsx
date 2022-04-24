@@ -42,10 +42,11 @@ function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acro
   for(let answer of downAnswerMap.values()){
     let x = answer.location.x
     let y = answer.location.y
+    console.log(answer.answer)
     for(let i = 0; i < answer.answer.length; i++){
-      console.log(grid[x][y+i])
+      console.log(grid[y+i][x])
       console.log(answer.answer[i])
-      if(grid[x][y+i].value.localeCompare(answer.answer[i]) != 0){
+      if(grid[y+i][x].value.localeCompare(answer.answer[i], undefined, {sensitivity: 'accent'}) != 0){
         return false
       }
     }
@@ -55,7 +56,7 @@ function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acro
     let x = answer.location.x
     let y = answer.location.y
     for(let i = 0; i < answer.answer.length; i++){
-      if(grid[x+i][y].value.localeCompare(answer.answer[i]) !== 0){
+      if(grid[y][x+i].value.localeCompare(answer.answer[i], undefined, {sensitivity: 'accent'}) !== 0){
         return false
       }
     }
