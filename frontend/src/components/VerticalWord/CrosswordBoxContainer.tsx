@@ -2,7 +2,7 @@ import React, { FormEvent, useMemo } from 'react';
 
 import styled from 'styled-components';
 import CrosswordInputBox from './CrosswordInputBox';
-import { Crossword, Point } from '../../generated/generated';
+import { Crossword, Point, Answer } from '../../generated/generated';
 import { useState } from 'react';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import { useEffect } from 'react';
@@ -19,37 +19,49 @@ const CrosswordRow = styled.div`
 `;
 const BLANK_CHARACTER : string = '.' // determines which cells in the answer should be empty
 
-// Create a new empty string[][] filled with ''
+// Create a new empty Point[][] filled with undefined
 function createBlankGrid(dimension: number) : Point[][] {
-
   return Array(dimension).fill(undefined as unknown as Point).map(() =>(Array(dimension).fill(undefined as unknown as Point)));
 }
 
-// Create a deep copy of a string[][]
-function deepCopy(array : Point[][]) : Point[][] {
-  let dimension = array.length;
-  var newArray : Point [][] = createBlankGrid(dimension);
-      for(let i = 0; i < dimension; i++){
-        for(let j = 0; j < dimension; j++){
-            newArray[i][j] = array[i][j]
-        }
-      }
-  return newArray
+// Create a deep copy of any type
+function deepCopy(array : any) : any {
+  let copy : any = JSON.parse(JSON.stringify(array))
+  return copy
 }
 
 // Compare two grids for equality
-function checkAnswer(currentArray : Point[][], answer : Point[][]) : boolean {
-  if(currentArray.length !== answer.length){
-    return false
+function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acrossAnswerMap : Map<number, Answer>) : boolean {
+  if(!downAnswerMap || !acrossAnswerMap){
+    return false;
   }
-  let isEqual = true
-  for(let i = 0; i < currentArray.length; i++){
-    for(let j = 0; j < currentArray.length; j++){
-      if(currentArray[i][j].value !== BLANK_CHARACTER && answer[i][j].value !== BLANK_CHARACTER)
-        isEqual &&= currentArray[i][j].value.toUpperCase() === answer[i][j].value.toUpperCase()
+  console.log("downMap", downAnswerMap)
+  console.log("acrossMap", acrossAnswerMap)
+  console.log("grid", grid)
+
+  for(let answer of downAnswerMap.values()){
+    let x = answer.location.x
+    let y = answer.location.y
+    for(let i = 0; i < answer.answer.length; i++){
+      console.log(grid[x][y+i])
+      console.log(answer.answer[i])
+      if(grid[x][y+i].value.localeCompare(answer.answer[i]) != 0){
+        return false
+      }
     }
   }
-  return isEqual
+
+  for(let answer of acrossAnswerMap.values()){
+    let x = answer.location.x
+    let y = answer.location.y
+    for(let i = 0; i < answer.answer.length; i++){
+      if(grid[x+i][y].value.localeCompare(answer.answer[i]) !== 0){
+        return false
+      }
+    }
+  }
+  return true
+    
 }
 
 export type CrosswordBoxContainerProps = { crossword: Crossword };
@@ -58,34 +70,48 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
   // Initialize empty crossword grid 
   const dimension : number = crossword.grid.dimension;
   
+ 
+  // Initialize the across/down answer maps 
+  const [downAnswerMap, acrossAnswerMap] = useMemo<Map<number, Answer>[]>(() => {
+    let downMap : Map<number, Answer> = new Map();
+    crossword.answers.down.forEach((answer) => {
+       downMap.set(answer.key, deepCopy(answer))
+    })
+
+    let acrossMap : Map<number, Answer> = new Map();
+    crossword.answers.across.forEach((answer) => {
+       acrossMap.set(answer.key, deepCopy(answer))
+    })
+    return [downMap, acrossMap]
+  }, [crossword] )
+
   // Initialize the template grid 
   const template = useMemo<Point[][]>(() => {
-    let tempAnswer : Point [][] = createBlankGrid(dimension);
+    let template : Point [][] = createBlankGrid(dimension);
     crossword.grid.points.forEach((point) => {
-       tempAnswer[point.y][point.x] = point
+        template[point.y][point.x] = point
+        if(Number(point.value)){
+          let answer = downAnswerMap.get(Number(point.value))
+          if(answer){
+            answer.location = deepCopy(point)
+          }
+          answer = acrossAnswerMap.get(Number(point.value))
+          if(answer){
+            answer.location = deepCopy(point)
+          }
+        }    
     })
-    return tempAnswer
-  }, [crossword, dimension] )
- 
-  // Initialize the answer grid 
-  const answer = useMemo<Point[][]>(() => {
-    var tempAnswer : Point [][] = createBlankGrid(dimension);
-    crossword.grid.points.forEach((point) => {
-       tempAnswer[point.y][point.x] = point
-    })
-    return tempAnswer
+    return template
   }, [crossword, dimension] )
 
   const [grid, setGrid] = useState<Point[][]>(template)
 
   // Check if the crossword is complete
   useEffect(() => {
-    console.log("grid", grid)
-    console.log("answer",answer)
-    if(checkAnswer(grid, answer)){
+    if(checkAnswer(grid, downAnswerMap, acrossAnswerMap)){
       alert("success!")
     }
-  }, [grid])
+  }, [grid, downAnswerMap, acrossAnswerMap])
 
   // Update grid with newest input
   const crosswordBoxInputHandler = (
@@ -136,7 +162,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
   return (
     <CrosswordContainer>
-      {answer.map( (row, i) => 
+      {template.map( (row, i) => 
         <CrosswordRow key={i}>
           {row.map( (point, j) =>{ 
             let cellIndex = i*dimension + j
