@@ -35,9 +35,6 @@ function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acro
   if(!downAnswerMap || !acrossAnswerMap){
     return false;
   }
-  console.log("downMap", downAnswerMap)
-  console.log("acrossMap", acrossAnswerMap)
-  console.log("grid", grid)
 
   for(let answer of downAnswerMap.values()){
     let x = answer.location.x
