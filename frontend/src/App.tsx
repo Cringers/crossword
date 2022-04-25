@@ -3,7 +3,6 @@ import {Crossword, useCrosswordQuery } from './generated/generated';
 
 function App() {
   const { data, loading } = useCrosswordQuery();
-
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>{data?.crossword.name}</h1>
