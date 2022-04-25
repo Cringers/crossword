@@ -39,11 +39,8 @@ function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acro
   for(let answer of downAnswerMap.values()){
     let x = answer.location.x
     let y = answer.location.y
-    console.log(answer.answer)
     for(let i = 0; i < answer.answer.length; i++){
-      console.log(grid[y+i][x])
-      console.log(answer.answer[i])
-      if(grid[y+i][x].value.localeCompare(answer.answer[i], undefined, {sensitivity: 'accent'}) != 0){
+      if(grid[y+i][x].value.localeCompare(answer.answer[i], undefined, {sensitivity: 'accent'}) !== 0){
         return false
       }
     }
