@@ -21,7 +21,6 @@ export const resolvers: Resolvers = {
                points.push(point);
             });
          });
-         console.log(crossword)
          return {
             name,
             id: 'someId',
