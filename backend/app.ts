@@ -80,7 +80,6 @@ async function start() {
    AppDataSource.initialize().then(async () => {
       const currentCrossword = 'cringe';
       const xword: Crossword = crosswordParser(currentCrossword);
-      //AppDataSource.manager.delete(Crossword, {name: xword.name})
       AppDataSource.manager.save(Crossword, xword);
 
       await startApolloServer(typeDefs, resolvers);
