@@ -10,6 +10,7 @@ node_modules
 
 # production
 frontend/build
+frontend/src/generated/*
 backend/generated/graphql.js
 backend/app.js
 backend/resolvers.js

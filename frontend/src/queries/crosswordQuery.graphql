@@ -9,5 +9,17 @@ query Crossword {
          value
       }
     }
+    answers {
+      across {
+        key 
+        clue
+        answer
+      }
+      down {
+        key 
+        clue
+        answer
+      }
+    }
   }
 }
