@@ -5,7 +5,9 @@ import { memo } from "react";
 const CrosswordBox = styled.div`
   border-top: black 1px solid;
   border-left: black 1px solid;
-  border-right: black 1px solid;
+  border-right: black 1px solid;  
+  border-bottom: black 1px solid;
+
   width: 2em;
   height: 2em;
   display: flex;
