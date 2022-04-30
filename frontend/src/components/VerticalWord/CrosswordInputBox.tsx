@@ -3,6 +3,12 @@ import React from "react";
 import { memo, FormEvent } from "react";
 
 const CrosswordBox = styled.div`
+
+  :empty:not(:focus):before{
+    content:attr(placeholder);
+    color: rgba(0, 0, 0, 0.5);
+    
+  }
   text-transform: uppercase;
   background-color: white;
   border-top: black 1px solid;
@@ -26,11 +32,8 @@ export type CrossWordInputBoxProps = {
 };
 const CrosswordInput = ({ value, onDelete, onInput}: CrossWordInputBoxProps) => {
 
-  if(Number(value)){
-    console.log(value)
-  }
   return (
-    <CrosswordBox contentEditable onInput={onInput} onKeyDown={onDelete}>{Number(value)? value : ""}</CrosswordBox>
+    <CrosswordBox placeholder={Number(value)? value : ""} contentEditable onInput={onInput} onKeyDown={onDelete}></CrosswordBox>
   );
 };
 const CrosswordInputBox = memo(CrosswordInput);
