@@ -150,9 +150,16 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
             break
          }
          case 'ArrowUp': {
-            let next = event.currentTarget?.previousSibling as HTMLElement 
-            next && next.focus();
+            let next = event.currentTarget?.previousSibling as HTMLElement || event.currentTarget?.parentNode?.previousSibling?.lastChild as HTMLElement;
+            next?.focus()
+            let count = 0;
+            while(next && !(next === getActiveElement(document)) && count < dimension*dimension){
+               next = (next as ChildNode)?.previousSibling as HTMLElement || (next as ChildNode)?.parentNode?.previousSibling?.lastChild as HTMLElement
+               next?.focus()
+               count += 1
+            }
             break
+            
          }
          case 'ArrowDown': {
             let next = event.currentTarget?.nextSibling as HTMLElement || event.currentTarget?.parentNode?.nextSibling?.firstChild as HTMLElement;
