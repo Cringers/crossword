@@ -6,7 +6,14 @@ import { Crossword, Point, Answer } from '../../generated/generated';
 import { useState } from 'react';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import { useEffect } from 'react';
+import AnswerContainer from '../Answers/AnswerContainer';
 
+const Main = styled.div`
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+`
 
 const CrosswordContainer = styled.div`
   border-bottom: solid 1px black;
@@ -55,6 +62,7 @@ function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acro
       }
     }
   }
+
   return true
     
 }
@@ -156,24 +164,29 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
   };
 
   return (
-    <CrosswordContainer>
-      {template.map( (row, i) => 
-        <CrosswordRow key={i}>
-          {row.map( (point, j) =>{ 
-            let cellIndex = i*dimension + j
-            if(point.value === BLANK_CHARACTER) {
-              return <CrosswordBlankBox key={cellIndex}/>
-            } else {
-              return  <CrosswordInputBox
-                key={cellIndex}
-                onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
-                onDelete={(event) => keyStrokeHandler(event, cellIndex)}
-              />
-            }
-          })}
-        </CrosswordRow>
-      )}
-    </CrosswordContainer>
+    <Main>
+      <AnswerContainer type="Down:"answers={downAnswerMap} grid={grid}></AnswerContainer>
+      <CrosswordContainer>
+        {template.map( (row, i) => 
+          <CrosswordRow key={i}>
+            {row.map( (point, j) =>{ 
+              let cellIndex = i*dimension + j
+              if(point.value === BLANK_CHARACTER) {
+                return <CrosswordBlankBox key={cellIndex}/>
+              } else {
+                return  <CrosswordInputBox
+                  key={cellIndex}
+                  value={point.value}
+                  onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
+                  onDelete={(event) => keyStrokeHandler(event, cellIndex)}
+                />
+              }
+            })}
+          </CrosswordRow>
+        )}
+      </CrosswordContainer>
+      <AnswerContainer type="Across:"answers={acrossAnswerMap} grid={grid}></AnswerContainer>
+    </Main>
   );
 };
 
