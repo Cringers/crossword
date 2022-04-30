@@ -78,7 +78,7 @@ async function startApolloServer(localTypeDefs, localResolvers) {
 console.log('Connecting to ATP database');
 async function start() {
    AppDataSource.initialize().then(async () => {
-      const currentCrossword = 'cringe';
+      const currentCrossword = CONFIG.CURRENT_CROSSWORD;
       const xword: Crossword = crosswordParser(currentCrossword);
       AppDataSource.manager.save(Crossword, xword);
 

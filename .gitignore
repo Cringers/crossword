@@ -11,7 +11,7 @@ node_modules
 # production
 frontend/build
 frontend/src/generated/*
-backend/generated/graphql.js
+backend/generated/graphql.ts
 backend/app.js
 backend/resolvers.js
 backend/typeDefs.js
