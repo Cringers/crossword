@@ -1,12 +1,12 @@
-import React, { FormEvent, useMemo } from 'react';
-
+import React, { FormEvent, useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import CrosswordInputBox from './CrosswordInputBox';
 import { Crossword, Point, Answer } from '../../generated/generated';
-import { useState } from 'react';
+import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
-import { useEffect } from 'react';
 import AnswerContainer from '../Answers/AnswerContainer';
+import { nextTick } from 'process';
+import { getActiveElement } from '@testing-library/user-event/dist/utils';
+import { count } from 'console';
 
 const Main = styled.div`
    width: fit-content;
@@ -135,26 +135,39 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
+      switch(event.key) {
+         case 'Backspace': 
+         case 'Delete': {
+            (event.currentTarget as HTMLElement).textContent = '';
 
-      if (event.key === 'Backspace' || event.key === 'Delete') {
-         (event.currentTarget as HTMLElement).textContent = '';
-
-         setGrid((currentGrid) => {
-            let newGrid: Point[][] = deepCopy(currentGrid);
-            newGrid[rowIndex][columnIndex].value = '';
-            return newGrid;
-         });
-         if (event.currentTarget?.previousSibling) {
-            (event.currentTarget?.previousSibling as HTMLElement).focus();
+            setGrid((currentGrid) => {
+               let newGrid: Point[][] = deepCopy(currentGrid);
+               newGrid[rowIndex][columnIndex].value = '';
+               return newGrid;
+            });
+            let next = event.currentTarget?.previousSibling as HTMLElement
+            next && next.focus()
+            break
          }
-         return;
-      }
-      if (event.key === 'ArrowUp' && event?.currentTarget?.previousSibling) {
-         (event.currentTarget?.previousSibling as HTMLElement).focus();
-      } else if (event.key === 'ArrowDown' && event?.currentTarget?.nextSibling) {
-         (event.currentTarget.nextSibling as HTMLElement).focus();
+         case 'ArrowUp': {
+            let next = event.currentTarget?.previousSibling as HTMLElement 
+            next && next.focus();
+            break
+         }
+         case 'ArrowDown': {
+            let next = event.currentTarget?.nextSibling as HTMLElement || event.currentTarget?.parentNode?.nextSibling?.firstChild as HTMLElement;
+            next?.focus()
+            let count = 0;
+            while(next && !(next === getActiveElement(document)) && count < dimension*dimension){
+               next = (next as ChildNode)?.nextSibling as HTMLElement || (next as ChildNode)?.parentNode?.nextSibling?.firstChild as HTMLElement
+               next?.focus()
+               count += 1
+            }
+            break
+         }
       }
    };
+
 
    return (
       <Main>
