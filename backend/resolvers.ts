@@ -1,11 +1,12 @@
 import { AppDataSource } from '@crossword/db';
+import { CONFIG } from '../node_modules/@crossword/config/index';
 import { Crossword as CrosswordEntity } from './entities/crossword';
 import { Resolvers, Crossword, Point } from './generated/graphql';
 
 export const resolvers: Resolvers = {
    Query: {
       crossword: async (): Promise<Crossword> => {
-         const crossword: CrosswordEntity = await AppDataSource.manager.findOneBy(CrosswordEntity, { name: 'cringe' });
+         const crossword: CrosswordEntity = await AppDataSource.manager.findOneBy(CrosswordEntity, { name: CONFIG.CURRENT_CROSSWORD });
          const { name, answers } = crossword;
          const points: Point[] = [];
          crossword.grid.forEach((row: Array<string>, y) => {
@@ -28,7 +29,7 @@ export const resolvers: Resolvers = {
                dimension: crossword.grid.length,
                points,
             },
-            answers
+            answers,
          };
       },
    },
