@@ -20,12 +20,17 @@ const CrosswordBox = styled.div`
 `;
 
 export type CrossWordInputBoxProps = {
+  value: string;
   onInput?: (event: FormEvent<HTMLDivElement>) => void;
   onDelete: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 };
-const CrosswordInput = ({ onDelete, onInput}: CrossWordInputBoxProps) => {
+const CrosswordInput = ({ value, onDelete, onInput}: CrossWordInputBoxProps) => {
+
+  if(Number(value)){
+    console.log(value)
+  }
   return (
-    <CrosswordBox contentEditable onInput={onInput} onKeyDown={onDelete}/>
+    <CrosswordBox contentEditable onInput={onInput} onKeyDown={onDelete}>{Number(value)? value : ""}</CrosswordBox>
   );
 };
 const CrosswordInputBox = memo(CrosswordInput);

@@ -176,6 +176,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
               } else {
                 return  <CrosswordInputBox
                   key={cellIndex}
+                  value={point.value}
                   onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                   onDelete={(event) => keyStrokeHandler(event, cellIndex)}
                 />
