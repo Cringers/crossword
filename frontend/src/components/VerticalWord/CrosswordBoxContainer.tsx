@@ -62,6 +62,7 @@ function checkAnswer(grid : Point[][], downAnswerMap : Map<number, Answer>, acro
       }
     }
   }
+
   return true
     
 }
