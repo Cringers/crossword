@@ -6,6 +6,7 @@ import { Crossword, Point, Answer } from '../../generated/generated';
 import { useState } from 'react';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import { useEffect } from 'react';
+import AnswerContainer from '../Answers/AnswerContainer';
 
 
 const CrosswordContainer = styled.div`
@@ -156,6 +157,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
   };
 
   return (
+    <>
     <CrosswordContainer>
       {template.map( (row, i) => 
         <CrosswordRow key={i}>
@@ -174,6 +176,10 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
         </CrosswordRow>
       )}
     </CrosswordContainer>
+    <AnswerContainer type="Down:"answers={downAnswerMap} grid={grid}></AnswerContainer>
+    <AnswerContainer type="Across:"answers={acrossAnswerMap} grid={grid}></AnswerContainer>
+
+    </>
   );
 };
 
