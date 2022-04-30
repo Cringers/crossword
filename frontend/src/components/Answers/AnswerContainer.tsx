@@ -3,14 +3,28 @@ import { useEffect } from 'react';
 import styled from "styled-components";
 import { Answer, Point } from '../../generated/generated';
 
-const AnswerDiv = styled.div`
+
+const AnswerWrapper = styled.div`
+  margin-left: 1em;
+`
+
+const AnswerElement = styled.div`
   width: 11em;
   display: flex;
   justify-content: left;
   align-items: left;
   background-color: transparent;
   caret-color: transparent;
+  margin-left: 1em;
+  margin-top: .5em;
 `;
+
+const AnswerTitle = styled.div`
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-decoration: underline;
+  font-weight: bold;
+`
 
 export type AnswerContainerProps = { type: string, answers: Map<number, Answer>, grid: Point[][] }
 const AnswerContainer= ({type, answers, grid} : AnswerContainerProps) => {
@@ -21,11 +35,11 @@ const AnswerContainer= ({type, answers, grid} : AnswerContainerProps) => {
   useEffect(() => {
     let tmp = []
     for(const [number, answer] of sortedAnswers.entries() ){
-      tmp.push((<AnswerDiv key={number}>{number+ ") " + answer.clue}</AnswerDiv>))
+      tmp.push((<AnswerElement key={number}>{number+ ") " + answer.clue}</AnswerElement>))
     }
     setAnswerDivs(tmp)
   }, [answers])
-  return <>{type}{answerDivs}</>
+  return <AnswerWrapper><AnswerTitle>{type}</AnswerTitle>{answerDivs}</AnswerWrapper>
 };
 export default AnswerContainer;
   
