@@ -42,7 +42,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           oci resource-manager job create-plan-job --stack-id "${{ secrets.OCI_STACK }}" --wait-for-state SUCCEEDED | jq .data.id | xargs -I {} oci resource-manager job get-job-logs --all --job-id {} | jq -r '.data | map(.message) | flatten[]' > output.tf
-          batcat --theme=ansi --paging=never output.tf
+          batcat --theme=ansi --color=always --paging=never output.tf
       
       - name: Upload Plan Log
         uses: actions/upload-artifact@v3
