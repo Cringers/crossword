@@ -69,6 +69,10 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
    return true;
 }
 
+const mod = (n : number, m : number) => {
+   return ((n % m) + m)  % m 
+}
+
 export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    // Initialize empty crossword grid
@@ -152,30 +156,49 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
             next && next.focus()
             break
          }
-         case 'ArrowUp': {
-            let next = event.currentTarget?.previousSibling as HTMLElement || event.currentTarget?.parentNode?.previousSibling?.lastChild as HTMLElement;
-            next?.focus()
-            let count = 0;
-            while(next && !(next === getActiveElement(document)) && count < dimension*dimension){
-               next = (next as ChildNode)?.previousSibling as HTMLElement || (next as ChildNode)?.parentNode?.previousSibling?.lastChild as HTMLElement
-               next?.focus()
+         case 'ArrowRight':{
+            let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
+               current?.focus()
                count += 1
             }
             break
-            
          }
-         case 'ArrowDown': {
-            refGrid[rowIndex + 1][columnIndex]?.current?.focus()
-            /*
-            let next = event.currentTarget?.nextSibling as HTMLElement || event.currentTarget?.parentNode?.nextSibling?.firstChild as HTMLElement;
-            next?.focus()
-            let count = 0;
-            while(next && !(next === getActiveElement(document)) && count < dimension*dimension){
-               next = (next as ChildNode)?.nextSibling as HTMLElement || (next as ChildNode)?.parentNode?.nextSibling?.firstChild as HTMLElement
-               next?.focus()
+         case 'ArrowLeft':{
+            let current = refGrid[rowIndex][mod(columnIndex-1,dimension)]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[rowIndex][mod(columnIndex - count,dimension)]?.current
+               current?.focus()
                count += 1
             }
-            */
+            break
+         }
+         case 'ArrowUp': {
+            let current = refGrid[mod(rowIndex-1,dimension)][columnIndex]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[mod(rowIndex - count,dimension)][columnIndex]?.current
+               current?.focus()
+               count += 1
+            }
+            break
+    
+         }
+         case 'ArrowDown': {
+            let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[(rowIndex + count)%dimension][columnIndex]?.current
+               current?.focus()
+               count += 1
+            }
             break
          }
       }
@@ -191,7 +214,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                   {row.map((point, j) => {
                      let cellIndex = i * dimension + j;
                      if (point.value === BLANK_CHARACTER) {
-                        return <CrosswordBlankBox key={cellIndex} />;
+                        return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
                      } else {
                         return (
                            <CrosswordInputBox
