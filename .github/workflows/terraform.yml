@@ -31,8 +31,12 @@ jobs:
           api_key: |
             ${{ secrets.OCI_API_KEY }}
           verbose: true
-          
+      
+      - name: jq
+        run: |
+            sudo apt install jq
+            
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          oci resource-manager job create-plan-job --stack-id "${{ secrets.OCI_STACK }}" 
+          oci resource-manager job create-plan-job --stack-id "${{ secrets.OCI_STACK }}" --wait-for-state SUCCEEDED | jq .data.id | xargs -I {} oci resource-manager job get-job-logs-content
