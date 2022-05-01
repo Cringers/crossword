@@ -7,6 +7,7 @@ import AnswerContainer from '../Answers/AnswerContainer';
 import { nextTick } from 'process';
 import { getActiveElement } from '@testing-library/user-event/dist/utils';
 import { count } from 'console';
+import { createRef } from 'react';
 
 const Main = styled.div`
    width: fit-content;
@@ -27,10 +28,10 @@ const CrosswordRow = styled.div`
 const BLANK_CHARACTER: string = '.'; // determines which cells in the answer should be empty
 
 // Create a new empty Point[][] filled with undefined
-function createBlankGrid(dimension: number): Point[][] {
+function createBlankGrid(dimension: number): any[][] {
    return Array(dimension)
-      .fill(undefined as unknown as Point)
-      .map(() => Array(dimension).fill(undefined as unknown as Point));
+      .fill(undefined)
+      .map(() => Array(dimension).fill(undefined));
 }
 
 // Create a deep copy of any type
@@ -107,6 +108,8 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    }, [crossword, dimension]);
 
    const [grid, setGrid] = useState<Point[][]>(template);
+   const [refGrid, setRefGrid] = useState<React.RefObject<HTMLDivElement>[][]>(createBlankGrid(dimension).map((row, i) => 
+   row.map((_, j) => createRef())))
 
    // Check if the crossword is complete
    useEffect(() => {
@@ -162,6 +165,8 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
             
          }
          case 'ArrowDown': {
+            refGrid[rowIndex + 1][columnIndex]?.current?.focus()
+            /*
             let next = event.currentTarget?.nextSibling as HTMLElement || event.currentTarget?.parentNode?.nextSibling?.firstChild as HTMLElement;
             next?.focus()
             let count = 0;
@@ -170,6 +175,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                next?.focus()
                count += 1
             }
+            */
             break
          }
       }
@@ -193,6 +199,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                               value={point.value}
                               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                               onDelete={(event) => keyStrokeHandler(event, cellIndex)}
+                              ref={refGrid[i][j]}
                            />
                         );
                      }
