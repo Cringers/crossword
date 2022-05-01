@@ -1,12 +1,10 @@
-import React, { FormEvent, useMemo } from 'react';
-
+import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
-import CrosswordInputBox from './CrosswordInputBox';
 import { Crossword, Point, Answer } from '../../generated/generated';
-import { useState } from 'react';
+import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
-import { useEffect } from 'react';
 import AnswerContainer from '../Answers/AnswerContainer';
+import { getActiveElement } from '@testing-library/user-event/dist/utils';
 
 const Main = styled.div`
    width: fit-content;
@@ -27,10 +25,10 @@ const CrosswordRow = styled.div`
 const BLANK_CHARACTER: string = '.'; // determines which cells in the answer should be empty
 
 // Create a new empty Point[][] filled with undefined
-function createBlankGrid(dimension: number): Point[][] {
+function createBlankGrid(dimension: number): any[][] {
    return Array(dimension)
-      .fill(undefined as unknown as Point)
-      .map(() => Array(dimension).fill(undefined as unknown as Point));
+      .fill(undefined)
+      .map(() => Array(dimension).fill(undefined));
 }
 
 // Create a deep copy of any type
@@ -39,12 +37,16 @@ function deepCopy(array: any): any {
    return copy;
 }
 
+// Modulus which works correctly for negative values
+const mod = (n : number, m : number) => {
+   return ((n % m) + m)  % m 
+}
+
 // Compare two grids for equality
 function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, acrossAnswerMap: Map<number, Answer>): boolean {
    if (!downAnswerMap || !acrossAnswerMap) {
       return false;
    }
-
    for (let answer of downAnswerMap.values()) {
       let x = answer.location.x;
       let y = answer.location.y;
@@ -54,7 +56,6 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
          }
       }
    }
-
    for (let answer of acrossAnswerMap.values()) {
       let x = answer.location.x;
       let y = answer.location.y;
@@ -64,7 +65,6 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
          }
       }
    }
-
    return true;
 }
 
@@ -107,6 +107,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    }, [crossword, dimension]);
 
    const [grid, setGrid] = useState<Point[][]>(template);
+   const [refGrid, _] = useState<React.RefObject<HTMLDivElement>[][]>(createBlankGrid(dimension).map((row, _) => row.map(() => createRef())))
 
    // Check if the crossword is complete
    useEffect(() => {
@@ -135,27 +136,67 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
+      switch(event.key) {
+         case 'Backspace': 
+         case 'Delete': {
+            (event.currentTarget as HTMLElement).textContent = '';
 
-      if (event.key === 'Backspace' || event.key === 'Delete') {
-         (event.currentTarget as HTMLElement).textContent = '';
-
-         setGrid((currentGrid) => {
-            let newGrid: Point[][] = deepCopy(currentGrid);
-            newGrid[rowIndex][columnIndex].value = '';
-            return newGrid;
-         });
-         if (event.currentTarget?.previousSibling) {
-            (event.currentTarget?.previousSibling as HTMLElement).focus();
+            setGrid((currentGrid) => {
+               let newGrid: Point[][] = deepCopy(currentGrid);
+               newGrid[rowIndex][columnIndex].value = '';
+               return newGrid;
+            });
+            let next = event.currentTarget?.previousSibling as HTMLElement
+            next && next.focus()
+            break
          }
-         return;
-      }
-      if (event.key === 'ArrowUp' && event?.currentTarget?.previousSibling) {
-         (event.currentTarget?.previousSibling as HTMLElement).focus();
-      } else if (event.key === 'ArrowDown' && event?.currentTarget?.nextSibling) {
-         (event.currentTarget.nextSibling as HTMLElement).focus();
+         case 'ArrowRight':{
+            let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
+               current?.focus()
+               count += 1
+            }
+            break
+         }
+         case 'ArrowLeft':{
+            let current = refGrid[rowIndex][mod(columnIndex-1,dimension)]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[rowIndex][mod(columnIndex - count,dimension)]?.current
+               current?.focus()
+               count += 1
+            }
+            break
+         }
+         case 'ArrowUp': {
+            let current = refGrid[mod(rowIndex-1,dimension)][columnIndex]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[mod(rowIndex - count,dimension)][columnIndex]?.current
+               current?.focus()
+               count += 1
+            }
+            break
+    
+         }
+         case 'ArrowDown': {
+            let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
+            current?.focus()
+            let count = 1
+            while(current && !(current === getActiveElement(document))) {
+               current = refGrid[(rowIndex + count)%dimension][columnIndex]?.current
+               current?.focus()
+               count += 1
+            }
+            break
+         }
       }
    };
-
    return (
       <Main>
          <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid}></AnswerContainer>
@@ -165,7 +206,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                   {row.map((point, j) => {
                      let cellIndex = i * dimension + j;
                      if (point.value === BLANK_CHARACTER) {
-                        return <CrosswordBlankBox key={cellIndex} />;
+                        return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
                      } else {
                         return (
                            <CrosswordInputBox
@@ -173,6 +214,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                               value={point.value}
                               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                               onDelete={(event) => keyStrokeHandler(event, cellIndex)}
+                              ref={refGrid[i][j]}
                            />
                         );
                      }
