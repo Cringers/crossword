@@ -18,9 +18,9 @@ const CrosswordBox = styled.div`
 `;
 
 
-const CrosswordBlank= () => {
-  return <CrosswordBox/>
-};
+const CrosswordBlank= React.forwardRef<HTMLDivElement, any>((_, ref) => {
+  return <CrosswordBox ref={ref}/>
+});
 const CrosswordBlankBox = memo(CrosswordBlank);
 export default CrosswordBlankBox;
   

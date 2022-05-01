@@ -30,11 +30,10 @@ export type CrossWordInputBoxProps = {
   onInput?: (event: FormEvent<HTMLDivElement>) => void;
   onDelete: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 };
-const CrosswordInput = ({ value, onDelete, onInput}: CrossWordInputBoxProps) => {
-
+const CrosswordInput = React.forwardRef<HTMLDivElement,CrossWordInputBoxProps>(({ value, onDelete, onInput}, ref) => {
   return (
-    <CrosswordBox placeholder={Number(value)? value : ""} contentEditable onInput={onInput} onKeyDown={onDelete}></CrosswordBox>
+    <CrosswordBox ref={ref} placeholder={Number(value)? value : ""} contentEditable onInput={onInput} onKeyDown={onDelete}></CrosswordBox>
   );
-};
+});
 const CrosswordInputBox = memo(CrosswordInput);
 export default CrosswordInputBox;
