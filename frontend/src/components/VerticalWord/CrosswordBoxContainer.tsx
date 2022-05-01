@@ -1,5 +1,7 @@
 import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
+import { mod, deepCopy, createBlankGrid } from '@crossword/utils'
+import { CONFIG } from '@crossword/config';
 import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
@@ -23,25 +25,6 @@ const CrosswordRow = styled.div`
    display: flex;
    flex-wrap: wrap;
 `;
-const BLANK_CHARACTER: string = '.'; // determines which cells in the answer should be empty
-
-// Create a new empty Point[][] filled with undefined
-function createBlankGrid(dimension: number): any[][] {
-   return Array(dimension)
-      .fill(undefined)
-      .map(() => Array(dimension).fill(undefined));
-}
-
-// Create a deep copy of any type
-function deepCopy(array: any): any {
-   let copy: any = JSON.parse(JSON.stringify(array));
-   return copy;
-}
-
-// Modulus which works correctly for negative values
-const mod = (n : number, m : number) => {
-   return ((n % m) + m)  % m 
-}
 
 // Compare two grids for equality
 function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, acrossAnswerMap: Map<number, Answer>): boolean {
@@ -217,7 +200,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                <CrosswordRow key={i}>
                   {row.map((point, j) => {
                      let cellIndex = i * dimension + j;
-                     if (point.value === BLANK_CHARACTER) {
+                     if (point.value === CONFIG.BLANK_CHARACTER) {
                         return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
                      } else {
                         return (

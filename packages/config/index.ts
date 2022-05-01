@@ -6,4 +6,5 @@ export const CONFIG = Object.freeze({
    SSL_CERT: NODE_ENV === 'production' ? '/home/opc/certificate.crt' : '',
    SSL_KEY: NODE_ENV === 'production' ? '/home/opc/private.key' : '',
    STAGE: NODE_ENV,
+   BLANK_CHARACTER: '.',
 });
