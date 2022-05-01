@@ -1,13 +1,10 @@
-import React, { FormEvent, useMemo, useState, useEffect } from 'react';
+import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
 import { Crossword, Point, Answer } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import AnswerContainer from '../Answers/AnswerContainer';
-import { nextTick } from 'process';
 import { getActiveElement } from '@testing-library/user-event/dist/utils';
-import { count } from 'console';
-import { createRef } from 'react';
 
 const Main = styled.div`
    width: fit-content;
@@ -40,12 +37,16 @@ function deepCopy(array: any): any {
    return copy;
 }
 
+// Modulus which works correctly for negative values
+const mod = (n : number, m : number) => {
+   return ((n % m) + m)  % m 
+}
+
 // Compare two grids for equality
 function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, acrossAnswerMap: Map<number, Answer>): boolean {
    if (!downAnswerMap || !acrossAnswerMap) {
       return false;
    }
-
    for (let answer of downAnswerMap.values()) {
       let x = answer.location.x;
       let y = answer.location.y;
@@ -55,7 +56,6 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
          }
       }
    }
-
    for (let answer of acrossAnswerMap.values()) {
       let x = answer.location.x;
       let y = answer.location.y;
@@ -65,12 +65,7 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
          }
       }
    }
-
    return true;
-}
-
-const mod = (n : number, m : number) => {
-   return ((n % m) + m)  % m 
 }
 
 export type CrosswordBoxContainerProps = { crossword: Crossword };
@@ -112,8 +107,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    }, [crossword, dimension]);
 
    const [grid, setGrid] = useState<Point[][]>(template);
-   const [refGrid, setRefGrid] = useState<React.RefObject<HTMLDivElement>[][]>(createBlankGrid(dimension).map((row, i) => 
-   row.map((_, j) => createRef())))
+   const [refGrid, _] = useState<React.RefObject<HTMLDivElement>[][]>(createBlankGrid(dimension).map((row, _) => row.map(() => createRef())))
 
    // Check if the crossword is complete
    useEffect(() => {
@@ -203,8 +197,6 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
          }
       }
    };
-
-
    return (
       <Main>
          <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid}></AnswerContainer>
