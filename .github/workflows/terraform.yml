@@ -39,7 +39,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          oci resource-manager job create-plan-job --stack-id "${{ secrets.OCI_STACK }}" --wait-for-state SUCCEEDED | jq .data.id | xargs -I {} oci resource-manager job get-job-logs-content --job-id {} | jq -r '.data | map(.message) | flatten[]' > output.txt
+          oci resource-manager job create-plan-job --stack-id "${{ secrets.OCI_STACK }}" --wait-for-state SUCCEEDED | jq .data.id | xargs -I {} oci resource-manager job get-job-logs --all --job-id {} | jq -r '.data | map(.message) | flatten[]' > output.txt
           cat output.txt
       
       - name: Upload Plan Log
