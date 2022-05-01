@@ -1,10 +1,11 @@
 import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
-import { Crossword, Point, Answer } from '../../generated/generated';
+import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import AnswerContainer from '../Answers/AnswerContainer';
 import { getActiveElement } from '@testing-library/user-event/dist/utils';
+import { useApolloClient } from '@apollo/client';
 
 const Main = styled.div`
    width: fit-content;
@@ -72,6 +73,8 @@ export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    // Initialize empty crossword grid
    const dimension: number = crossword.grid.dimension;
+   const client = useApolloClient();
+   const {data, loading} = useDirectionQuery();
 
    // Initialize the across/down answer maps
    const [downAnswerMap, acrossAnswerMap] = useMemo<Map<number, Answer>[]>(() => {
@@ -137,6 +140,15 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
       switch(event.key) {
+
+         // Change whether the user is typing in the across/down direction
+         case 'Shift': {
+            client.writeQuery({
+               query: DirectionDocument,
+               data: { direction: data?.direction === 'across'? 'down' : 'across' }
+            })
+            break;
+         }
          case 'Backspace': 
          case 'Delete': {
             (event.currentTarget as HTMLElement).textContent = '';
