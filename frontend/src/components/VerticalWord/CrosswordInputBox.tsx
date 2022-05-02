@@ -36,7 +36,7 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
     width: .8em;
     height: .8em;
     background: linear-gradient(to bottom right, ${({ direction }) => direction === 'down'? 'red' : 'green'} 50%, rgba(0,0,0,.5) 50%, transparent 52%);
-    transform: rotate(${({direction}) => direction ==='down'? '-135deg': '135deg'}) translate(-10px, -10px);
+    transform: rotate(${({direction}) => direction ==='down'? '-135deg': '135deg'}) translate(-.65em, -.65em);
     box-shadow: 0px 0px 0px -2px rgba(0, 0, 0, 0.5);
   }
   caret-color: transparent;
