@@ -14,6 +14,7 @@ const Main = styled.div`
    margin: auto;
    display: flex;
    flex-direction: row;
+   font-size: x-large;
 `;
 const CrosswordContainer = styled.div`
    border-bottom: solid 1px black;
