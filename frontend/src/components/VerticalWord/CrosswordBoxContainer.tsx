@@ -15,7 +15,6 @@ const Main = styled.div`
    display: flex;
    flex-direction: row;
 `;
-
 const CrosswordContainer = styled.div`
    border-bottom: solid 1px black;
    width: fit-content;
@@ -51,6 +50,30 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
    }
    return true;
 }
+
+const handleRight = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
+   let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
+   current?.focus()
+   let count = 1
+   while(current && !(current === getActiveElement(document))) {
+      current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
+      current?.focus()
+      count += 1
+   }
+}
+
+const handleDown = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
+   let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
+   current?.focus()
+   let count = 1
+   while(current && !(current === getActiveElement(document))) {
+      current = refGrid[(rowIndex + count)%dimension][columnIndex]?.current
+      current?.focus()
+      count += 1
+   }
+}
+
+
 
 export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
@@ -113,15 +136,18 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
          newGrid[rowIndex][columnIndex].value = input ? input : currentGrid[rowIndex][columnIndex].value;
          return newGrid;
       });
-      if (event.currentTarget.nextSibling) {
-         (event.currentTarget.nextSibling as HTMLElement).focus();
-      }
+
+      console.log(data?.direction)
+      console.log(event.currentTarget)
+      let handle = data?.direction === 'across'? handleRight : handleDown;
+      handle(refGrid, rowIndex, columnIndex, dimension);
    };
 
    // On backspace/delete delete the current element from the grid
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
+      console.log(event.key)
       switch(event.key) {
 
          // Change whether the user is typing in the across/down direction
@@ -146,14 +172,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
             break
          }
          case 'ArrowRight':{
-            let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
-            current?.focus()
-            let count = 1
-            while(current && !(current === getActiveElement(document))) {
-               current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
-               current?.focus()
-               count += 1
-            }
+            handleRight(refGrid, rowIndex, columnIndex, dimension)
             break
          }
          case 'ArrowLeft':{
