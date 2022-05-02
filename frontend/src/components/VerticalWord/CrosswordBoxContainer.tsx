@@ -2,12 +2,12 @@ import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react
 import styled from 'styled-components';
 import { mod, deepCopy, createBlankGrid } from '@crossword/utils'
 import { CONFIG } from '@crossword/config';
-import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument } from '../../generated/generated';
+import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument, DirectionQuery } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import AnswerContainer from '../Answers/AnswerContainer';
 import { getActiveElement } from '@testing-library/user-event/dist/utils';
-import { useApolloClient } from '@apollo/client';
+import { ApolloClient, useApolloClient } from '@apollo/client';
 
 const Main = styled.div`
    width: fit-content;
@@ -63,6 +63,13 @@ const handleRight = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: num
    }
 }
 
+const toggleDirection = (client: ApolloClient<object>, data: DirectionQuery | undefined) => {
+   client.writeQuery({
+      query: DirectionDocument,
+      data: { direction: data?.direction === 'across'? 'down' : 'across' }
+   })
+}
+
 const handleDown = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
    let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
    current?.focus()
@@ -73,8 +80,6 @@ const handleDown = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: numb
       count += 1
    }
 }
-
-
 
 export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
@@ -153,10 +158,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
 
          // Change whether the user is typing in the across/down direction
          case 'Shift': {
-            client.writeQuery({
-               query: DirectionDocument,
-               data: { direction: data?.direction === 'across'? 'down' : 'across' }
-            })
+            toggleDirection(client, data)
             break;
          }
          case 'Backspace': 
@@ -227,6 +229,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                            <CrosswordInputBox
                               key={cellIndex}
                               value={point.value}
+                              onDoubleClick={(event) => toggleDirection(client, data)}
                               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                               onDelete={(event) => keyStrokeHandler(event, cellIndex)}
                               ref={refGrid[i][j]}

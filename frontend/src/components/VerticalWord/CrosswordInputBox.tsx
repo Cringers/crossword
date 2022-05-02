@@ -46,12 +46,13 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
 export type CrossWordInputBoxProps = {
   direction: string | undefined;
   value: string;
+  onDoubleClick?:(event: React.MouseEvent) => void;
   onInput?: (event: FormEvent<HTMLDivElement>) => void;
   onDelete: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 };
-const CrosswordInput = React.forwardRef<HTMLDivElement,CrossWordInputBoxProps>(({ direction, value, onDelete, onInput}, ref) => {
+const CrosswordInput = React.forwardRef<HTMLDivElement,CrossWordInputBoxProps>(({ direction, value, onDoubleClick, onDelete, onInput}, ref) => {
   return (
-   <CrosswordBox direction={direction as string} ref={ref} placeholder={Number(value)? value : ""} contentEditable onInput={onInput} onKeyDown={onDelete}/> 
+   <CrosswordBox direction={direction as string} ref={ref} placeholder={Number(value)? value : ""} contentEditable onDoubleClick={onDoubleClick} onInput={onInput} onKeyDown={onDelete}/> 
   );
 });
 const CrosswordInputBox = memo(CrosswordInput);
