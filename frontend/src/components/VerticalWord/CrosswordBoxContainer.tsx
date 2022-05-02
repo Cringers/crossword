@@ -1,18 +1,21 @@
 import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
-import { Crossword, Point, Answer } from '../../generated/generated';
+import { mod, deepCopy, createBlankGrid } from '@crossword/utils'
+import { CONFIG } from '@crossword/config';
+import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument, DirectionQuery } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import AnswerContainer from '../Answers/AnswerContainer';
 import { getActiveElement } from '@testing-library/user-event/dist/utils';
+import { ApolloClient, useApolloClient } from '@apollo/client';
 
 const Main = styled.div`
    width: fit-content;
    margin: auto;
    display: flex;
    flex-direction: row;
+   font-size: x-large;
 `;
-
 const CrosswordContainer = styled.div`
    border-bottom: solid 1px black;
    width: fit-content;
@@ -22,25 +25,6 @@ const CrosswordRow = styled.div`
    display: flex;
    flex-wrap: wrap;
 `;
-const BLANK_CHARACTER: string = '.'; // determines which cells in the answer should be empty
-
-// Create a new empty Point[][] filled with undefined
-function createBlankGrid(dimension: number): any[][] {
-   return Array(dimension)
-      .fill(undefined)
-      .map(() => Array(dimension).fill(undefined));
-}
-
-// Create a deep copy of any type
-function deepCopy(array: any): any {
-   let copy: any = JSON.parse(JSON.stringify(array));
-   return copy;
-}
-
-// Modulus which works correctly for negative values
-const mod = (n : number, m : number) => {
-   return ((n % m) + m)  % m 
-}
 
 // Compare two grids for equality
 function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, acrossAnswerMap: Map<number, Answer>): boolean {
@@ -68,10 +52,41 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
    return true;
 }
 
+const handleRight = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
+   let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
+   current?.focus()
+   let count = 1
+   while(current && !(current === getActiveElement(document))) {
+      current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
+      current?.focus()
+      count += 1
+   }
+}
+
+const toggleDirection = (client: ApolloClient<object>, data: DirectionQuery | undefined) => {
+   client.writeQuery({
+      query: DirectionDocument,
+      data: { direction: data?.direction === 'across'? 'down' : 'across' }
+   })
+}
+
+const handleDown = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
+   let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
+   current?.focus()
+   let count = 1
+   while(current && !(current === getActiveElement(document))) {
+      current = refGrid[(rowIndex + count)%dimension][columnIndex]?.current
+      current?.focus()
+      count += 1
+   }
+}
+
 export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    // Initialize empty crossword grid
    const dimension: number = crossword.grid.dimension;
+   const client = useApolloClient();
+   const {data, loading} = useDirectionQuery();
 
    // Initialize the across/down answer maps
    const [downAnswerMap, acrossAnswerMap] = useMemo<Map<number, Answer>[]>(() => {
@@ -127,16 +142,25 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
          newGrid[rowIndex][columnIndex].value = input ? input : currentGrid[rowIndex][columnIndex].value;
          return newGrid;
       });
-      if (event.currentTarget.nextSibling) {
-         (event.currentTarget.nextSibling as HTMLElement).focus();
-      }
+
+      console.log(data?.direction)
+      console.log(event.currentTarget)
+      let handle = data?.direction === 'across'? handleRight : handleDown;
+      handle(refGrid, rowIndex, columnIndex, dimension);
    };
 
    // On backspace/delete delete the current element from the grid
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
+      console.log(event.key)
       switch(event.key) {
+
+         // Change whether the user is typing in the across/down direction
+         case 'Shift': {
+            toggleDirection(client, data)
+            break;
+         }
          case 'Backspace': 
          case 'Delete': {
             (event.currentTarget as HTMLElement).textContent = '';
@@ -151,14 +175,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
             break
          }
          case 'ArrowRight':{
-            let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
-            current?.focus()
-            let count = 1
-            while(current && !(current === getActiveElement(document))) {
-               current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
-               current?.focus()
-               count += 1
-            }
+            handleRight(refGrid, rowIndex, columnIndex, dimension)
             break
          }
          case 'ArrowLeft':{
@@ -205,16 +222,18 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                <CrosswordRow key={i}>
                   {row.map((point, j) => {
                      let cellIndex = i * dimension + j;
-                     if (point.value === BLANK_CHARACTER) {
+                     if (point.value === CONFIG.BLANK_CHARACTER) {
                         return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
                      } else {
                         return (
                            <CrosswordInputBox
                               key={cellIndex}
                               value={point.value}
+                              onDoubleClick={(event) => toggleDirection(client, data)}
                               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                               onDelete={(event) => keyStrokeHandler(event, cellIndex)}
                               ref={refGrid[i][j]}
+                              direction={data?.direction}
                            />
                         );
                      }
