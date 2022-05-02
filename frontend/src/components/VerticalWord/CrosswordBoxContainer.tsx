@@ -210,6 +210,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                               onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                               onDelete={(event) => keyStrokeHandler(event, cellIndex)}
                               ref={refGrid[i][j]}
+                              direction={data?.direction}
                            />
                         );
                      }
