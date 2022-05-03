@@ -25,8 +25,8 @@ const AnswerTitle = styled.div`
    font-weight: bold;
 `;
 
-export type AnswerContainerProps = { type: string; answers: Map<number, Answer>; grid: Point[][]; hidden?: boolean };
-const AnswerContainer = ({ type, answers, grid, hidden = false }: AnswerContainerProps) => {
+export type AnswerContainerProps = { type: string; answers: Map<number, Answer>; grid: Point[][]; id?: string };
+const AnswerContainer = ({ type, answers, grid, id }: AnswerContainerProps) => {
    let [sortedAnswers, _] = useState(new Map([...answers].sort((a, b) => a[0] - b[0])));
    let [answerDivs, setAnswerDivs] = useState<JSX.Element[]>([]);
 
@@ -38,7 +38,7 @@ const AnswerContainer = ({ type, answers, grid, hidden = false }: AnswerContaine
       setAnswerDivs(tmp);
    }, [answers]);
    return (
-      <AnswerWrapper hidden={hidden}>
+      <AnswerWrapper id={id}>
          <AnswerTitle>{type}</AnswerTitle>
          {answerDivs}
       </AnswerWrapper>
