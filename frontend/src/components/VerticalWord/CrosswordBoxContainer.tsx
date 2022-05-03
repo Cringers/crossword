@@ -14,6 +14,7 @@ const Main = styled.div`
    margin: auto;
    display: flex;
    flex-direction: row;
+   gap: 10px;
    font-size: x-large;
    #hideBig {
       display: none;

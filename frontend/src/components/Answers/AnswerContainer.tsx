@@ -3,9 +3,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Answer, Point } from '../../generated/generated';
 
-const AnswerWrapper = styled.div`
-   margin-left: 1em;
-`;
+const AnswerWrapper = styled.div``;
 
 const AnswerElement = styled.div`
    width: 11em;
