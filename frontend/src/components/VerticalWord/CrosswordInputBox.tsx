@@ -36,6 +36,7 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
    :focus::after {
       content: '';
       position: absolute;
+      right: 10px;
       width: 0.8em;
       height: 0.8em;
       background: linear-gradient(
@@ -46,6 +47,7 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
       );
       transform: rotate(${({ direction }) => (direction === 'down' ? '-135deg' : '135deg')}) translate(-0.65em, -0.65em);
       box-shadow: 0px 0px 0px -2px rgba(0, 0, 0, 0.5);
+      z-index: 10000;
    }
    caret-color: transparent;
 `;
