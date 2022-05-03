@@ -13,8 +13,8 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
       content: attr(placeholder);
       position: absolute;
       top: 0px;
-      left: 0px;
-      font-size: small;
+      left: 2px;
+      font-size: 0.6em;
       color: rgba(0, 0, 0);
    }
    position: relative;
