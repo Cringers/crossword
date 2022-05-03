@@ -14,16 +14,29 @@ const Main = styled.div`
    margin: auto;
    display: flex;
    flex-direction: row;
+   gap: 10px;
    font-size: x-large;
+   #hideBig {
+      display: none;
+   }
+   @media (max-width: 750px) {
+      flex-direction: column;
+      #hideSmall {
+         display: none;
+      }
+      #hideBig {
+         display: contents;
+      }
+   }
 `;
 const CrosswordContainer = styled.div`
    border-bottom: solid 1px black;
    width: fit-content;
+   min-width: fit-content;
    margin: auto;
 `;
 const CrosswordRow = styled.div`
    display: flex;
-   flex-wrap: wrap;
 `;
 
 // Compare two grids for equality
@@ -216,7 +229,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    };
    return (
       <Main>
-         <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid}></AnswerContainer>
+         <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid} id="hideSmall"></AnswerContainer>
          <div style={{ borderRight: 'black 1px solid', height: 'fit-content', margin: 'auto' }}>
             <CrosswordContainer>
                {template.map((row, i) => (
@@ -243,6 +256,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                ))}
             </CrosswordContainer>
          </div>
+         <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid} id="hideBig"></AnswerContainer>
          <AnswerContainer type="Down:" answers={downAnswerMap} grid={grid}></AnswerContainer>
       </Main>
    );
