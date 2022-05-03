@@ -1,6 +1,6 @@
 import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
-import { mod, deepCopy, createBlankGrid } from '@crossword/utils'
+import { mod, deepCopy, createBlankGrid } from '@crossword/utils';
 import { CONFIG } from '@crossword/config';
 import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument, DirectionQuery } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
@@ -53,40 +53,40 @@ function checkAnswer(grid: Point[][], downAnswerMap: Map<number, Answer>, across
 }
 
 const handleRight = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
-   let current = refGrid[rowIndex][mod(columnIndex+1,dimension)]?.current
-   current?.focus()
-   let count = 1
-   while(current && !(current === getActiveElement(document))) {
-      current = refGrid[rowIndex][mod(columnIndex + count,dimension)]?.current
-      current?.focus()
-      count += 1
+   let current = refGrid[rowIndex][mod(columnIndex + 1, dimension)]?.current;
+   current?.focus();
+   let count = 1;
+   while (current && !(current === getActiveElement(document))) {
+      current = refGrid[rowIndex][mod(columnIndex + count, dimension)]?.current;
+      current?.focus();
+      count += 1;
    }
-}
+};
 
 const toggleDirection = (client: ApolloClient<object>, data: DirectionQuery | undefined) => {
    client.writeQuery({
       query: DirectionDocument,
-      data: { direction: data?.direction === 'across'? 'down' : 'across' }
-   })
-}
+      data: { direction: data?.direction === 'across' ? 'down' : 'across' },
+   });
+};
 
 const handleDown = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: number, columnIndex: number, dimension: number) => {
-   let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
-   current?.focus()
-   let count = 1
-   while(current && !(current === getActiveElement(document))) {
-      current = refGrid[(rowIndex + count)%dimension][columnIndex]?.current
-      current?.focus()
-      count += 1
+   let current = refGrid[(rowIndex + 1) % dimension][columnIndex]?.current;
+   current?.focus();
+   let count = 1;
+   while (current && !(current === getActiveElement(document))) {
+      current = refGrid[(rowIndex + count) % dimension][columnIndex]?.current;
+      current?.focus();
+      count += 1;
    }
-}
+};
 
 export type CrosswordBoxContainerProps = { crossword: Crossword };
 const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    // Initialize empty crossword grid
    const dimension: number = crossword.grid.dimension;
    const client = useApolloClient();
-   const {data, loading} = useDirectionQuery();
+   const { data, loading } = useDirectionQuery();
 
    // Initialize the across/down answer maps
    const [downAnswerMap, acrossAnswerMap] = useMemo<Map<number, Answer>[]>(() => {
@@ -122,7 +122,9 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    }, [crossword, dimension]);
 
    const [grid, setGrid] = useState<Point[][]>(template);
-   const [refGrid, _] = useState<React.RefObject<HTMLDivElement>[][]>(createBlankGrid(dimension).map((row, _) => row.map(() => createRef())))
+   const [refGrid, _] = useState<React.RefObject<HTMLDivElement>[][]>(
+      createBlankGrid(dimension).map((row, _) => row.map(() => createRef())),
+   );
 
    // Check if the crossword is complete
    useEffect(() => {
@@ -139,13 +141,13 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
       let input: string = event?.currentTarget?.textContent?.at(0) || '';
       setGrid((currentGrid) => {
          var newGrid: Point[][] = deepCopy(currentGrid);
-         newGrid[rowIndex][columnIndex].value = input ? input : currentGrid[rowIndex][columnIndex].value;
+         newGrid[rowIndex][columnIndex].value = input ? input.trim() : currentGrid[rowIndex][columnIndex].value.trim();
          return newGrid;
       });
 
-      console.log(data?.direction)
-      console.log(event.currentTarget)
-      let handle = data?.direction === 'across'? handleRight : handleDown;
+      console.log(data?.direction);
+      console.log(event.currentTarget);
+      let handle = data?.direction === 'across' ? handleRight : handleDown;
       handle(refGrid, rowIndex, columnIndex, dimension);
    };
 
@@ -153,15 +155,14 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
-      console.log(event.key)
-      switch(event.key) {
-
+      console.log(event.key);
+      switch (event.key) {
          // Change whether the user is typing in the across/down direction
          case 'Shift': {
-            toggleDirection(client, data)
+            toggleDirection(client, data);
             break;
          }
-         case 'Backspace': 
+         case 'Backspace':
          case 'Delete': {
             (event.currentTarget as HTMLElement).textContent = '';
 
@@ -170,77 +171,78 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                newGrid[rowIndex][columnIndex].value = '';
                return newGrid;
             });
-            let next = event.currentTarget?.previousSibling as HTMLElement
-            next && next.focus()
-            break
+            let next = event.currentTarget?.previousSibling as HTMLElement;
+            next && next.focus();
+            break;
          }
-         case 'ArrowRight':{
-            handleRight(refGrid, rowIndex, columnIndex, dimension)
-            break
+         case 'ArrowRight': {
+            handleRight(refGrid, rowIndex, columnIndex, dimension);
+            break;
          }
-         case 'ArrowLeft':{
-            let current = refGrid[rowIndex][mod(columnIndex-1,dimension)]?.current
-            current?.focus()
-            let count = 1
-            while(current && !(current === getActiveElement(document))) {
-               current = refGrid[rowIndex][mod(columnIndex - count,dimension)]?.current
-               current?.focus()
-               count += 1
+         case 'ArrowLeft': {
+            let current = refGrid[rowIndex][mod(columnIndex - 1, dimension)]?.current;
+            current?.focus();
+            let count = 1;
+            while (current && !(current === getActiveElement(document))) {
+               current = refGrid[rowIndex][mod(columnIndex - count, dimension)]?.current;
+               current?.focus();
+               count += 1;
             }
-            break
+            break;
          }
          case 'ArrowUp': {
-            let current = refGrid[mod(rowIndex-1,dimension)][columnIndex]?.current
-            current?.focus()
-            let count = 1
-            while(current && !(current === getActiveElement(document))) {
-               current = refGrid[mod(rowIndex - count,dimension)][columnIndex]?.current
-               current?.focus()
-               count += 1
+            let current = refGrid[mod(rowIndex - 1, dimension)][columnIndex]?.current;
+            current?.focus();
+            let count = 1;
+            while (current && !(current === getActiveElement(document))) {
+               current = refGrid[mod(rowIndex - count, dimension)][columnIndex]?.current;
+               current?.focus();
+               count += 1;
             }
-            break
-    
+            break;
          }
          case 'ArrowDown': {
-            let current = refGrid[(rowIndex+1)%dimension][columnIndex]?.current
-            current?.focus()
-            let count = 1
-            while(current && !(current === getActiveElement(document))) {
-               current = refGrid[(rowIndex + count)%dimension][columnIndex]?.current
-               current?.focus()
-               count += 1
+            let current = refGrid[(rowIndex + 1) % dimension][columnIndex]?.current;
+            current?.focus();
+            let count = 1;
+            while (current && !(current === getActiveElement(document))) {
+               current = refGrid[(rowIndex + count) % dimension][columnIndex]?.current;
+               current?.focus();
+               count += 1;
             }
-            break
+            break;
          }
       }
    };
    return (
       <Main>
          <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid}></AnswerContainer>
-         <CrosswordContainer>
-            {template.map((row, i) => (
-               <CrosswordRow key={i}>
-                  {row.map((point, j) => {
-                     let cellIndex = i * dimension + j;
-                     if (point.value === CONFIG.BLANK_CHARACTER) {
-                        return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
-                     } else {
-                        return (
-                           <CrosswordInputBox
-                              key={cellIndex}
-                              value={point.value}
-                              onDoubleClick={(event) => toggleDirection(client, data)}
-                              onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
-                              onDelete={(event) => keyStrokeHandler(event, cellIndex)}
-                              ref={refGrid[i][j]}
-                              direction={data?.direction}
-                           />
-                        );
-                     }
-                  })}
-               </CrosswordRow>
-            ))}
-         </CrosswordContainer>
+         <div style={{ borderRight: 'black 1px solid', height: 'fit-content', margin: 'auto' }}>
+            <CrosswordContainer>
+               {template.map((row, i) => (
+                  <CrosswordRow key={i}>
+                     {row.map((point, j) => {
+                        let cellIndex = i * dimension + j;
+                        if (point.value === CONFIG.BLANK_CHARACTER) {
+                           return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
+                        } else {
+                           return (
+                              <CrosswordInputBox
+                                 key={cellIndex}
+                                 point={point}
+                                 onDoubleClick={(event) => toggleDirection(client, data)}
+                                 onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
+                                 onDelete={(event) => keyStrokeHandler(event, cellIndex)}
+                                 ref={refGrid[i][j]}
+                                 direction={data?.direction}
+                              />
+                           );
+                        }
+                     })}
+                  </CrosswordRow>
+               ))}
+            </CrosswordContainer>
+         </div>
          <AnswerContainer type="Down:" answers={downAnswerMap} grid={grid}></AnswerContainer>
       </Main>
    );
