@@ -15,6 +15,9 @@ const Main = styled.div`
    display: flex;
    flex-direction: row;
    font-size: x-large;
+   @media (max-width: 750px) {
+      flex-direction: column;
+   }
 `;
 const CrosswordContainer = styled.div`
    border-bottom: solid 1px black;
@@ -23,7 +26,7 @@ const CrosswordContainer = styled.div`
 `;
 const CrosswordRow = styled.div`
    display: flex;
-   flex-wrap: wrap;
+   /* flex-wrap: wrap; */
 `;
 
 // Compare two grids for equality
@@ -125,13 +128,18 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    const [refGrid, _] = useState<React.RefObject<HTMLDivElement>[][]>(
       createBlankGrid(dimension).map((row, _) => row.map(() => createRef())),
    );
-
+   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
    // Check if the crossword is complete
    useEffect(() => {
       if (checkAnswer(grid, downAnswerMap, acrossAnswerMap)) {
          alert('success!');
       }
    }, [grid, downAnswerMap, acrossAnswerMap]);
+   useEffect(() => {
+      window.addEventListener('resize', () => {
+         setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+      });
+   });
 
    // Update grid with newest input
    const crosswordBoxInputHandler = (event: FormEvent<HTMLDivElement>, cellNumber: number) => {
@@ -216,7 +224,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    };
    return (
       <Main>
-         <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid}></AnswerContainer>
+         <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid} hidden={windowSize.width < 750}></AnswerContainer>
          <div style={{ borderRight: 'black 1px solid', height: 'fit-content', margin: 'auto' }}>
             <CrosswordContainer>
                {template.map((row, i) => (
@@ -243,6 +251,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                ))}
             </CrosswordContainer>
          </div>
+         <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid} hidden={windowSize.width > 750}></AnswerContainer>
          <AnswerContainer type="Down:" answers={downAnswerMap} grid={grid}></AnswerContainer>
       </Main>
    );
