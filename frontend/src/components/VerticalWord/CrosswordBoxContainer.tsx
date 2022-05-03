@@ -36,7 +36,6 @@ const CrosswordContainer = styled.div`
 `;
 const CrosswordRow = styled.div`
    display: flex;
-   /* flex-wrap: wrap; */
 `;
 
 // Compare two grids for equality
