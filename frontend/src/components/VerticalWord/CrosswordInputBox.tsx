@@ -13,16 +13,16 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
       content: attr(placeholder);
       position: absolute;
       top: 0px;
-      left: 2px;
+      left: 0.2em;
       font-size: 0.6em;
       color: rgba(0, 0, 0);
    }
+   box-sizing: content-box;
    position: relative;
    text-transform: uppercase;
    background-color: white;
    border-top: black 1px solid;
    border-left: black 1px solid;
-   border-right: black 1px solid;
    width: 2em;
    height: 2em;
    display: flex;
@@ -45,7 +45,7 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
          rgba(0, 0, 0, 0.5) 50%,
          transparent 52%
       );
-      transform: rotate(${({ direction }) => (direction === 'down' ? '-135deg' : '135deg')}) translate(-0.65em, -0.65em);
+      transform: rotate(${({ direction }) => (direction === 'down' ? '-135deg' : '135deg')}) translate(-65%, -65%);
       box-shadow: 0px 0px 0px -2px rgba(0, 0, 0, 0.5);
       z-index: 10000;
    }

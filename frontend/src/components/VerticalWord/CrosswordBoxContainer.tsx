@@ -217,30 +217,32 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    return (
       <Main>
          <AnswerContainer type="Across:" answers={acrossAnswerMap} grid={grid}></AnswerContainer>
-         <CrosswordContainer>
-            {template.map((row, i) => (
-               <CrosswordRow key={i}>
-                  {row.map((point, j) => {
-                     let cellIndex = i * dimension + j;
-                     if (point.value === CONFIG.BLANK_CHARACTER) {
-                        return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
-                     } else {
-                        return (
-                           <CrosswordInputBox
-                              key={cellIndex}
-                              point={point}
-                              onDoubleClick={(event) => toggleDirection(client, data)}
-                              onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
-                              onDelete={(event) => keyStrokeHandler(event, cellIndex)}
-                              ref={refGrid[i][j]}
-                              direction={data?.direction}
-                           />
-                        );
-                     }
-                  })}
-               </CrosswordRow>
-            ))}
-         </CrosswordContainer>
+         <div style={{ borderRight: 'black 1px solid', height: 'fit-content', margin: 'auto' }}>
+            <CrosswordContainer>
+               {template.map((row, i) => (
+                  <CrosswordRow key={i}>
+                     {row.map((point, j) => {
+                        let cellIndex = i * dimension + j;
+                        if (point.value === CONFIG.BLANK_CHARACTER) {
+                           return <CrosswordBlankBox ref={refGrid[i][j]} key={cellIndex} />;
+                        } else {
+                           return (
+                              <CrosswordInputBox
+                                 key={cellIndex}
+                                 point={point}
+                                 onDoubleClick={(event) => toggleDirection(client, data)}
+                                 onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
+                                 onDelete={(event) => keyStrokeHandler(event, cellIndex)}
+                                 ref={refGrid[i][j]}
+                                 direction={data?.direction}
+                              />
+                           );
+                        }
+                     })}
+                  </CrosswordRow>
+               ))}
+            </CrosswordContainer>
+         </div>
          <AnswerContainer type="Down:" answers={downAnswerMap} grid={grid}></AnswerContainer>
       </Main>
    );
