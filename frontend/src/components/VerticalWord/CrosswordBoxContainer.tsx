@@ -31,6 +31,7 @@ const Main = styled.div`
 const CrosswordContainer = styled.div`
    border-bottom: solid 1px black;
    width: fit-content;
+   min-width: fit-content;
    margin: auto;
 `;
 const CrosswordRow = styled.div`
