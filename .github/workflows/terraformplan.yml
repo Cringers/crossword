@@ -50,7 +50,7 @@ jobs:
 
               oci resource-manager job create-plan-job --stack-id $STACK_ID --query data.id --wait-for-state SUCCEEDED | xargs -I {} oci resource-manager job get-job-logs --all --job-id {} --query "data[].message[]" | jq -r "flatten[]"  > output.json
 
-              echo $STACK_ID \n ${{ github.ref_name }} > id.txt
+              echo "$STACK_ID \n ${{ github.ref_name }}" > id.txt
 
               batcat --theme=ansi --color=always --paging=never id.txt
               batcat --theme=ansi --color=always --paging=never output.tf
