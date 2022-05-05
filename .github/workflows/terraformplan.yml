@@ -44,7 +44,7 @@ jobs:
            run: |
               oci resource-manager stack get-stack-tf-state --stack-id ${{ secrets.OCI_STACK }} --file state.tfstate
 
-              export STACK_ID = $(oci resource-manager stack create-from-git-provider --terraform-version '1.0.x' -c ${{ secrets.OCI_TENANCY }} --config-source-configuration-source-provider-id ${{ secrets.OCI_CONFIG_SOURCE_PROVIDER }} --config-source-branch-name ${{ github.ref_name }} --config-source-repository-url https://github.com/Cringers/crossword --config-source-working-directory terraform/infrastructure --query data.id)
+              export STACK_ID=$(oci resource-manager stack create-from-git-provider --terraform-version '1.0.x' -c ${{ secrets.OCI_TENANCY }} --config-source-configuration-source-provider-id ${{ secrets.OCI_CONFIG_SOURCE_PROVIDER }} --config-source-branch-name ${{ github.ref_name }} --config-source-repository-url https://github.com/Cringers/crossword --config-source-working-directory terraform/infrastructure --query data.id)
 
               oci resource-manager job create-import-tf-state-job --stack-id $STACK_ID --tf-state-file state.tfstate --wait-for-state SUCCEEDED
 
