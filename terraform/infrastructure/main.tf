@@ -3,11 +3,11 @@ locals {
 }
 
 provider "oci" {
-  tenancy_ocid = local.tenancy_ocid
-  user_ocid = "ocid1.user.oc1..aaaaaaaa7jqvwjbhlarubmfz2v6cdgjaztlbuhhalqnngsc2avt7e23dgcxa" 
+  tenancy_ocid     = local.tenancy_ocid
+  user_ocid        = "ocid1.user.oc1..aaaaaaaa7jqvwjbhlarubmfz2v6cdgjaztlbuhhalqnngsc2avt7e23dgcxa"
   private_key_path = "key.pem"
-  fingerprint = "8b:12:cd:4d:66:64:62:82:11:8c:2c:93:8c:c0:e4:81"
-  region = "us-phoenix-1"
+  fingerprint      = "8b:12:cd:4d:66:64:62:82:11:8c:2c:93:8c:c0:e4:81"
+  region           = "us-phoenix-1"
 }
 
 data "oci_core_images" "images" {
@@ -37,6 +37,6 @@ resource "oci_core_instance" "production" {
 
   metadata = {
     ssh_authorized_keys = "${file("authorized_keys")}"
-    user_data = "${base64encode(data.template_file.cloud-config.rendered)}"
+    user_data           = "${base64encode(data.template_file.cloud-config.rendered)}"
   }
 }
