@@ -22,7 +22,7 @@ const ModalBox = styled.div`
 
 export type ModalProps = { children: string };
 export const Modal = ({children,}: ModalProps) => {
-  let [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(true);
 
   const closeModal = () => {
     setShowModal(false)
