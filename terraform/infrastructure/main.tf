@@ -23,6 +23,7 @@ data "template_file" "cloud-config" {
 	  - sudo sh -c "echo /usr/lib/oracle/21/client64/lib > /etc/ld.so.conf.d/oracle-instantclient.conf"
 	  - sudo ldconfig
     - curl https://get.volta.sh | bash
+    - echo Test
   YAML
 }
 
