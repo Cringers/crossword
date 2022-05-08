@@ -1,0 +1,47 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Terraform Plan
+
+# Controls when the workflow will run
+on:
+   # Triggers the workflow on push or pull request events but only for the main branch
+   push:
+      branches:
+         - main
+
+   # Allows you to run this workflow manually from the Actions tab
+   workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+   # This workflow contains a single job called "build"
+   RemoveTestStack:
+      # The type of runner that the job will run on
+      runs-on: ubuntu-latest
+      env:
+         TERM: xterm-256color
+      environment: Production
+
+      # Steps represent a sequence of tasks that will be executed as part of the job
+      steps:
+         - name: Download artifact
+           uses: dawidd6/action-download-artifact@v2
+           with:
+              # Required, workflow file name or ID
+              workflow: terraformplan.yml
+              # Optional, the status or conclusion of a completed workflow to search for
+              # Can be one of a workflow conclusion:
+              #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
+              # Or a workflow status:
+              #   "completed", "in_progress", "queued"
+              workflow_conclusion: success
+              # Optional, will get head commit SHA
+              pr: ${{github.event.pull_request.number}}
+              # Optional, uploaded artifact name,
+              # will download all artifacts if not specified
+              # and extract them in respective subdirectories
+              # https://github.com/actions/download-artifact#download-all-artifacts
+              name: id
+              # Optional, search for the last workflow run whose stored an artifact named as in `name` input
+              # default false
+              search_artifacts: true
