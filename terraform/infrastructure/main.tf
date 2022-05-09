@@ -23,7 +23,6 @@ data "template_file" "cloud-config" {
 	  - sudo sh -c "echo /usr/lib/oracle/21/client64/lib > /etc/ld.so.conf.d/oracle-instantclient.conf"
 	  - sudo ldconfig
     - curl https://get.volta.sh | bash
-    - echo Test
   YAML
 }
 
@@ -37,7 +36,7 @@ resource "oci_core_instance" "production" {
   shape               = "VM.Standard.E2.1.Micro"
 
   metadata = {
-    ssh_authorized_keys = "${file("infrastructure/authorized_keys")}"
+    ssh_authorized_keys = "${file("authorized_keys")}"
     user_data           = "${base64encode(data.template_file.cloud-config.rendered)}"
   }
 }
