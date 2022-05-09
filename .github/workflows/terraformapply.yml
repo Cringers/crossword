@@ -22,8 +22,18 @@ jobs:
          TERM: xterm-256color
       environment: Production
 
-      # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
+         - name: oci-cli
+           uses: bytesbay/oci-cli-action@v1.0.2
+           with:
+              user: '${{ secrets.OCI_USER }}'
+              fingerprint: '${{ secrets.OCI_FINGERPRINT }}'
+              tenancy: '${{ secrets.OCI_TENANCY }}'
+              region: '${{ secrets.OCI_REGION }}'
+              api_key: |
+                 ${{ secrets.OCI_API_KEY }}
+              verbose: true
+
          - name: Download artifact
            uses: dawidd6/action-download-artifact@v2
            with:
