@@ -33,6 +33,7 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
       outline: none;
       box-shadow: inset 0px 0px 0px 1px white, inset 0px 0px 0px 2px ${(props) => (props.direction === 'down' ? 'red' : 'green')};
    }
+   ::selection { background: transparent }
    :focus::after {
       content: '';
       position: absolute;
