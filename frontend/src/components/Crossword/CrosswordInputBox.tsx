@@ -4,7 +4,7 @@ import { memo, FormEvent } from 'react';
 import { Point } from '../../generated/generated';
 
 // Make style of focus a function of the current direction
-export type CrosswordBoxStyleProps = {
+type CrosswordBoxStyleProps = {
    direction: string;
    point: Point;
 };
@@ -48,7 +48,7 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
       );
       transform: rotate(${({ direction }) => (direction === 'down' ? '-135deg' : '135deg')}) translate(-0.65em, -0.65em);
       box-shadow: 0px 0px 0px -2px rgba(0, 0, 0, 0.5);
-      z-index: 10000;
+      z-index: 1;
    }
    caret-color: transparent;
 `;
