@@ -45,3 +45,7 @@ jobs:
               # Optional, search for the last workflow run whose stored an artifact named as in `name` input
               # default false
               search_artifacts: true
+
+         - name: Remove Stack
+           run: |
+              oci resource-manager stack delete --stack-id $(head -n 1 id.txt) --wait-for-state DELETED --wait-for-state FAILED --wait-interval-seconds 10 --force
