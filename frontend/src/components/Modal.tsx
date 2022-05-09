@@ -19,7 +19,7 @@ const ModalBackground = styled.div`
 const ModalBox = styled.div`
   background: whitesmoke;
   padding: 1em;
-  border-radius: 1em;
+  border-radius: .1em;
   align-items: center;
 `
 
