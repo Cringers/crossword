@@ -175,9 +175,12 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       console.log(event.key);
 >>>>>>> 8e8b9466... refactor directory names, add missing files
+=======
+>>>>>>> 632dae47... cleanup
       switch (event.key) {
          // Change whether the user is typing in the across/down direction
          case 'Shift': {
