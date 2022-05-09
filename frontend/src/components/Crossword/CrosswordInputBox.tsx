@@ -28,8 +28,6 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
    display: flex;
    justify-content: center;
    align-items: center;
-
-   user-select: none;
    &:focus {
       background-color: transparent;
       outline: none;
