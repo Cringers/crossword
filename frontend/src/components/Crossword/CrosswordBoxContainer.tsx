@@ -2,7 +2,7 @@ import React, { FormEvent, useMemo, useState, useEffect, createRef } from 'react
 import styled from 'styled-components';
 import { mod, deepCopy, createBlankGrid } from '@crossword/utils';
 import { CONFIG } from '@crossword/config';
-import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument, DirectionQuery } from '../../generated/generated';
+import { Crossword, Point, Answer, useDirectionQuery, DirectionDocument, DirectionQuery, IsAnsweredQuery, IsAnsweredDocument } from '../../generated/generated';
 import CrosswordInputBox from './CrosswordInputBox';
 import CrosswordBlankBox from './CrosswordBlankBox';
 import AnswerContainer from '../Answers/AnswerContainer';
@@ -76,6 +76,12 @@ const handleRight = (refGrid: React.RefObject<HTMLDivElement>[][], rowIndex: num
    }
 };
 
+const markAnswered = (client : ApolloClient<object>, isAnswered: boolean ) => {
+   client.writeQuery({
+      query: IsAnsweredDocument,
+      data: { isAnswered }
+   })
+}
 const toggleDirection = (client: ApolloClient<object>, data: DirectionQuery | undefined) => {
    client.writeQuery({
       query: DirectionDocument,
@@ -99,7 +105,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    // Initialize empty crossword grid
    const dimension: number = crossword.grid.dimension;
    const client = useApolloClient();
-   const { data, loading } = useDirectionQuery();
+   const { data: directionData, loading } = useDirectionQuery();
 
    // Initialize the across/down answer maps
    const [downAnswerMap, acrossAnswerMap] = useMemo<Map<number, Answer>[]>(() => {
@@ -142,7 +148,9 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    // Check if the crossword is complete
    useEffect(() => {
       if (checkAnswer(grid, downAnswerMap, acrossAnswerMap)) {
-         alert('success!');
+         markAnswered(client, true);
+      } else {
+         markAnswered(client, false);
       }
    }, [grid, downAnswerMap, acrossAnswerMap]);
 
@@ -158,9 +166,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
          return newGrid;
       });
 
-      console.log(data?.direction);
-      console.log(event.currentTarget);
-      let handle = data?.direction === 'across' ? handleRight : handleDown;
+      let handle = directionData?.direction === 'down' ? handleDown : handleRight;
       handle(refGrid, rowIndex, columnIndex, dimension);
    };
 
@@ -168,11 +174,10 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
-      console.log(event.key);
       switch (event.key) {
          // Change whether the user is typing in the across/down direction
          case 'Shift': {
-            toggleDirection(client, data);
+            toggleDirection(client, directionData);
             break;
          }
          case 'Backspace':
@@ -225,6 +230,9 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
             }
             break;
          }
+         case 'Escape': {
+            markAnswered(client, false)
+         }
       }
    };
    return (
@@ -243,11 +251,11 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                               <CrosswordInputBox
                                  key={cellIndex}
                                  point={point}
-                                 onDoubleClick={(event) => toggleDirection(client, data)}
+                                 onDoubleClick={() => toggleDirection(client, directionData)}
                                  onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                                  onDelete={(event) => keyStrokeHandler(event, cellIndex)}
                                  ref={refGrid[i][j]}
-                                 direction={data?.direction}
+                                 direction={directionData?.direction}
                               />
                            );
                         }

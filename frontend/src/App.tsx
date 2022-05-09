@@ -1,16 +1,18 @@
-import styled from 'styled-components';
-import AnswerContainer from './components/Answers/AnswerContainer';
-import CrosswordBoxContainer from './components/VerticalWord/CrosswordBoxContainer';
+import CrosswordBoxContainer from './components/Crossword/CrosswordBoxContainer';
+import { Modal } from './components/Modal';
 import {Crossword, useCrosswordQuery } from './generated/generated';
 
 function App() {
   const { data, loading } = useCrosswordQuery();
   return (
     <>
-      <h1 style={{ textAlign: 'center' }}>{data?.crossword.name}</h1>
+      <h1 style={{ textAlign: 'center'}}>Crosswordle</h1>
+      <hr></hr>
+      <h2 style={{ textAlign: 'center', textTransform: 'capitalize'}}>{data?.crossword.name}</h2>
       {!loading && (
           <CrosswordBoxContainer crossword={data?.crossword as Crossword } />
       )}
+      <Modal>test</Modal>
     </>
   );
 }

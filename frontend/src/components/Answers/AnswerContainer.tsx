@@ -1,4 +1,4 @@
-import React, { FormEvent, useMemo, memo, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Answer, Point } from '../../generated/generated';
