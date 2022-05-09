@@ -174,7 +174,6 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
    const keyStrokeHandler = (event: React.KeyboardEvent<HTMLDivElement>, cellNumber: number) => {
       let columnIndex = cellNumber % dimension;
       let rowIndex = Math.floor(cellNumber / dimension);
-      console.log(event.key);
       switch (event.key) {
          // Change whether the user is typing in the across/down direction
          case 'Shift': {
@@ -252,7 +251,7 @@ const CrosswordBoxContainer = ({ crossword }: CrosswordBoxContainerProps) => {
                               <CrosswordInputBox
                                  key={cellIndex}
                                  point={point}
-                                 onDoubleClick={(event) => toggleDirection(client, directionData)}
+                                 onDoubleClick={() => toggleDirection(client, directionData)}
                                  onInput={(event) => crosswordBoxInputHandler(event, cellIndex)}
                                  onDelete={(event) => keyStrokeHandler(event, cellIndex)}
                                  ref={refGrid[i][j]}
