@@ -30,13 +30,5 @@ yarn-error.log*
 key.pem
 terraform.tfstate
 terraform.tfstate.backup
-<<<<<<< HEAD
 .terraform/
 local.secrets
-=======
-.terraform/providers/registry.terraform.io/hashicorp/oci/4.73.0/linux_amd64/CHANGELOG.md
-.terraform/providers/registry.terraform.io/hashicorp/oci/4.73.0/linux_amd64/LICENSE.md
-.terraform/providers/registry.terraform.io/hashicorp/oci/4.73.0/linux_amd64/README.md
-.terraform/providers/registry.terraform.io/hashicorp/oci/4.73.0/linux_amd64/terraform-provider-oci_v4.73.0
-.terraform/providers/registry.terraform.io/hashicorp/template/2.2.0/linux_amd64/terraform-provider-template_v2.2.0_x4
->>>>>>> main
