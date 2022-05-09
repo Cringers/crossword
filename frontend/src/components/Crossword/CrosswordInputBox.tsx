@@ -28,11 +28,14 @@ const CrosswordBox = styled.div<CrosswordBoxStyleProps>`
    display: flex;
    justify-content: center;
    align-items: center;
+
+   user-select: none;
    &:focus {
       background-color: transparent;
       outline: none;
       box-shadow: inset 0px 0px 0px 1px white, inset 0px 0px 0px 2px ${(props) => (props.direction === 'down' ? 'red' : 'green')};
    }
+   ::selection { background: transparent }
    :focus::after {
       content: '';
       position: absolute;
