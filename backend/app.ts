@@ -36,6 +36,11 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    });
    backendApp.use(cors());
    frontendApp.use(cors()); // TODO pick CORS policy besides *
+   frontendApp.enable('trust proxy');
+   frontendApp.use((req, res, next) => {
+      // eslint-disable-next-line no-unused-expressions
+      req.secure ? next() : res.redirect(`https://${req.headers.host}${req.url}`);
+   });
 
    await apiServer.start();
    apiServer.applyMiddleware({ app: backendApp });
@@ -68,8 +73,6 @@ async function startApolloServer(localTypeDefs, localResolvers) {
       case 'development':
          break;
       default:
-         // eslint-disable-next-line no-console
-         console.error('Cringe wtfffffff');
          throw new Error(`Not a recognized stage: ${CONFIG.STAGE}`);
    }
 }
