@@ -37,7 +37,7 @@ resource "oci_core_instance" "production" {
   shape               = "VM.Standard.E2.1.Micro"
 
   metadata = {
-    ssh_authorized_keys = "${file("infrastructure/authorized_keys")}"
+    ssh_authorized_keys = "${file("authorized_keys")}"
     user_data           = "${base64encode(data.template_file.cloud-config.rendered)}"
   }
 }
