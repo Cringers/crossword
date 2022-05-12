@@ -19,6 +19,7 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    // eslint-disable-next-line no-console
    console.log('Starting Apollo Server');
    const frontendApp = express();
+   const frontendHttpApp = express();
    frontendApp.use(
       '/graphql',
       createProxyMiddleware({
@@ -51,6 +52,8 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    console.log(`🚀 Server ready at http://localhost:${CONFIG.BACKEND_PORT}${apiServer.graphqlPath}`);
 
    let frontendServer: https.Server;
+   let frontendHttpServer: http.Server;
+
    switch (CONFIG.STAGE) {
       case 'production': {
          const key = fs.readFileSync(CONFIG.SSL_KEY, 'utf8');
@@ -58,13 +61,20 @@ async function startApolloServer(localTypeDefs, localResolvers) {
          const credentials = { key, cert };
 
          frontendServer = https.createServer(credentials, frontendApp);
+         frontendHttpServer = http.createServer(frontendHttpApp);
 
          frontendApp.get('/', (req, res) => {
             res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
          });
+         frontendHttpApp.get('*', (req, res) => {
+            res.redirect(`https://${req.headers.host}${req.path}`);
+         });
          frontendApp.use(express.static(path.join(__dirname, '../frontend/build')));
          await new Promise<void>(() => {
             frontendServer.listen({ port: CONFIG.FRONTEND_PORT });
+         });
+         await new Promise<void>(() => {
+            frontendHttpServer.listen({ port: 80 });
          });
          // eslint-disable-next-line no-console
          console.log(`🚀 Server ready at http://localhost:${CONFIG.FRONTEND_PORT}/`);
