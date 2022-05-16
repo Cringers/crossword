@@ -37,11 +37,6 @@ async function startApolloServer(localTypeDefs, localResolvers) {
    });
    backendApp.use(cors());
    frontendApp.use(cors()); // TODO pick CORS policy besides *
-   frontendApp.enable('trust proxy');
-   frontendApp.use((req, res, next) => {
-      // eslint-disable-next-line no-unused-expressions
-      req.secure ? next() : res.redirect(`https://${req.headers.host}${req.url}`);
-   });
 
    await apiServer.start();
    apiServer.applyMiddleware({ app: backendApp });
@@ -70,12 +65,8 @@ async function startApolloServer(localTypeDefs, localResolvers) {
             res.redirect(`https://${req.headers.host}${req.path}`);
          });
          frontendApp.use(express.static(path.join(__dirname, '../frontend/build')));
-         await new Promise<void>(() => {
-            frontendServer.listen({ port: CONFIG.FRONTEND_PORT });
-         });
-         await new Promise<void>(() => {
-            frontendHttpServer.listen({ port: 80 });
-         });
+         frontendServer.listen({ port: CONFIG.FRONTEND_PORT });
+         frontendHttpServer.listen({ port: 80 });
          // eslint-disable-next-line no-console
          console.log(`🚀 Server ready at http://localhost:${CONFIG.FRONTEND_PORT}/`);
          break;
